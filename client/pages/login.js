@@ -1,24 +1,65 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import { login } from "../store/authSlice"; // Import the login action
 import styles from "../styles/Login.module.css";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import { GoogleLogin } from "react-google-login";
 
-export default function login() {
-  const [username, setUsername] = useState("");
+const mockUser = {
+  email: "test@gmail.com",
+  password: "1234",
+};
+
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const dispatch = useDispatch(); // Initialize useDispatch
+
+  // Google login success handler
+  const handleGoogleLoginSuccess = async (response) => {
+    const { tokenId } = response;
+    try {
+      // Send Google tokenId to your Node.js backend
+      const res = await axios.post("/api/auth/google", { tokenId });
+      if (res.data.success) {
+        localStorage.setItem("authToken", res.data.token); // Assuming token returned from backend
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("Google Login failed", error);
+    }
+  };
+
+  // Google login failure handler
+  const handleGoogleLoginFailure = (response) => {
+    console.log("Google Login Failed", response);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post("/api/login", {
-        username,
-        email,
-        password,
-      });
-      if (response.data.success) {
-        router.push("/login");
+      if (email === mockUser.email && password === mockUser.password) {
+        localStorage.setItem("authToken", "your-token-here");
+        dispatch(login({ email }));
+        router.push("/dashboard");
+      } else {
+        console.error("Login failed: Invalid email or password");
+        alert("Invalid email or password"); // Alert for feedback
+        const response = await axios.post("/api/login", {
+          email,
+          password,
+        });
+        if (response.data.success) {
+          dispatch(login(response.data.user));
+          router.push("/dashboard");
+        } else {
+          console.error("Login failed: ", response.data.message);
+        }
       }
     } catch (error) {
       console.error("Login failed", error);
@@ -27,39 +68,103 @@ export default function login() {
 
   return (
     <div className="main">
-      <div className={styles.section}>
+      <div className={`section-login ${styles.section}`}>
+        <div className="overlay"></div>
         <div className={styles.sizer}>
           <div className={styles.container}>
             <div className={styles.row}>
               <div className="w-5/12 m-auto">
                 <div className={styles.block_content}>
-                  <h1 className={styles.heading}>Log In</h1>
-
-                  <form onSubmit={handleLogin}>
-                    <div className={styles.formGroup}>
-                      <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className={styles.input}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className={styles.input}
-                      />
-                    </div>
+                  <div className={styles.signupH}>
+                    <h1 className={styles.heading}>Log In</h1>
+                  </div>
+                  <Box
+                    component="form"
+                    fullWidth
+                    noValidate
+                    autoComplete="off"
+                    onSubmit={handleLogin}
+                  >
+                    <TextField
+                      fullWidth
+                      id="email"
+                      label="Email"
+                      variant="outlined"
+                      margin="normal"
+                      onChange={(e) => setEmail(e.target.value)}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          color: "#e50914",
+                          fontFamily: "Arial",
+                          fontWeight: "bold",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e50914",
+                            borderWidth: "2px",
+                          },
+                          "&.Mui-focused": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                              borderWidth: "2px",
+                            },
+                          },
+                          "&:hover:not(.Mui-focused)": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                            },
+                          },
+                        },
+                        "& .MuiInputLabel-outlined": {
+                          color: "#e50914",
+                          fontWeight: "bold",
+                          "&.Mui-focused": {
+                            color: "#e50914",
+                            fontWeight: "bold",
+                          },
+                        },
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      id="password"
+                      label="Password"
+                      variant="outlined"
+                      margin="normal"
+                      onChange={(e) => setPassword(e.target.value)}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          color: "#e50914",
+                          fontFamily: "Arial",
+                          fontWeight: "bold",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e50914",
+                            borderWidth: "2px",
+                          },
+                          "&.Mui-focused": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                              borderWidth: "2px",
+                            },
+                          },
+                          "&:hover:not(.Mui-focused)": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                            },
+                          },
+                        },
+                        "& .MuiInputLabel-outlined": {
+                          color: "#e50914",
+                          fontWeight: "bold",
+                          "&.Mui-focused": {
+                            color: "#e50914",
+                            fontWeight: "bold",
+                          },
+                        },
+                      }}
+                    />
                     <button type="submit" className={styles.button}>
                       Log In
                     </button>
-                  </form>
+                  </Box>
                   <div className={styles.or}>
                     <div className="line"></div>
                     <span>OR</span>
@@ -78,7 +183,15 @@ export default function login() {
                   </div>
 
                   <div className="google w-full py-2">
-                    <button className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded inline-flex items-center shadow-md w-full justify-center">
+                    <GoogleLogin
+                      buttonText="Continue with Google"
+                      onSuccess={handleGoogleLoginSuccess}
+                      onFailure={handleGoogleLoginFailure}
+                      cookiePolicy={"single_host_origin"}
+                      className={styles.googleButton}
+                      
+                    />
+                    {/* <button className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded inline-flex items-center shadow-md w-full justify-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-6 h-6 mr-2 fill-current"
@@ -102,7 +215,13 @@ export default function login() {
                         ></path>
                       </svg>
                       <span>Continue with Google</span>
-                    </button>
+                    </button> */}
+                  </div>
+
+                  <div className={styles.footer}>
+                    <span className="text-gray-500">
+                      Don't have an account?
+                    </span>
                   </div>
                 </div>
               </div>
