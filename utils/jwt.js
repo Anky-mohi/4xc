@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken";
-import { config } from "../config/config";
+const jwt = require("jsonwebtoken");
+const {config} = require("../config/config");
 
-export const generateToken = (data, time) => {
+exports.generateToken = (data, time) => {
   let secretKey = config.JWT_PRIVATE_KEY;
   try {
     let token;

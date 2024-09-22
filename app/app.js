@@ -8,6 +8,7 @@ const multipart = require('../middlwares/multer.middlware');
 const { urlEncoded, jsonEncoded } = require('../middlwares/bodyParser.middlware');
 const cors = require('../middlwares/cors.middlware');
 const path = require("path");
+const indexRoute = require("../routes/index.routes");
 
 // here all routes file
 // const userRoutes = require("../routes/user.routes");
@@ -24,7 +25,7 @@ app.use('/storage/images',express.static(path.join(__dirname, 'storage/images'))
 // routes middlware
 // app.use("/api/user/",userRoutes);
 // app.use("/api/task",taskRoutes);
-
+app.use("/api",indexRoute);
 
 app.use(notFoundErr);
 app.use(globalErrHandler);
