@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import styles from "../styles/Signup.module.css";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -18,7 +21,7 @@ export default function Signup() {
         password,
       });
       if (response.data.success) {
-        router.push("/login"); // Redirect to login on successful signup
+        router.push("/dashboard"); 
       }
     } catch (error) {
       console.error("Signup failed", error);
@@ -27,13 +30,16 @@ export default function Signup() {
 
   return (
     <div className="main">
-      <div className={styles.section}>
+      <div className={`section-signup ${styles.section}`}>
+        <div className="overlay"></div>
         <div className={styles.sizer}>
           <div className={styles.container}>
             <div className={styles.row}>
               <div className="w-5/12 m-auto">
                 <div className={styles.block_content}>
-                  <h1 className={styles.heading}>Sign Up</h1>
+                  <div className={styles.signupH}>
+                    <h1 className={styles.heading}>Sign Up</h1>
+                  </div>
                   <div className="facebook w-full py-2">
                     <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center w-full justify-center">
                       <svg
@@ -78,41 +84,128 @@ export default function Signup() {
                     <div className="line"></div>
                     <span>OR</span>
                   </div>
-                  <form onSubmit={handleSignup}>
-                    <div className={styles.formGroup}>
-                      <input
-                        type="text"
-                        placeholder="Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        className={styles.input}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className={styles.input}
-                      />
-                    </div>
-                    <div className={styles.formGroup}>
-                      <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className={styles.input}
-                      />
-                    </div>
+                  <Box component="form" fullWidth noValidate autoComplete="off" onSubmit={handleSignup}>
+                    <TextField
+                      fullWidth
+                      id="username"
+                      label="Username"
+                      variant="outlined"
+                      margin="normal"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          color: "#e50914",
+                          fontFamily: "Arial",
+                          fontWeight: "bold",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e50914",
+                            borderWidth: "2px",
+                          },
+                          "&.Mui-focused": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                              borderWidth: "2px",
+                            },
+                          },
+                          "&:hover:not(.Mui-focused)": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                            },
+                          },
+                        },
+                        "& .MuiInputLabel-outlined": {
+                          color: "#e50914",
+                          fontWeight: "bold",
+                          "&.Mui-focused": {
+                            color: "#e50914",
+                            fontWeight: "bold",
+                          },
+                        },
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      id="email"
+                      label="Email"
+                      variant="outlined"
+                      margin="normal"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          color: "#e50914",
+                          fontFamily: "Arial",
+                          fontWeight: "bold",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e50914",
+                            borderWidth: "2px",
+                          },
+                          "&.Mui-focused": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                              borderWidth: "2px",
+                            },
+                          },
+                          "&:hover:not(.Mui-focused)": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                            },
+                          },
+                        },
+                        "& .MuiInputLabel-outlined": {
+                          color: "#e50914",
+                          fontWeight: "bold",
+                          "&.Mui-focused": {
+                            color: "#e50914",
+                            fontWeight: "bold",
+                          },
+                        },
+                      }}
+                    />
+                    <TextField
+                      fullWidth
+                      id="password"
+                      label="Password"
+                      variant="outlined"
+                      margin="normal"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          color: "#e50914",
+                          fontFamily: "Arial",
+                          fontWeight: "bold",
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "#e50914",
+                            borderWidth: "2px",
+                          },
+                          "&.Mui-focused": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                              borderWidth: "2px",
+                            },
+                          },
+                          "&:hover:not(.Mui-focused)": {
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "#e50914",
+                            },
+                          },
+                        },
+                        "& .MuiInputLabel-outlined": {
+                          color: "#e50914",
+                          fontWeight: "bold",
+                          "&.Mui-focused": {
+                            color: "#e50914",
+                            fontWeight: "bold",
+                          },
+                        },
+                      }}
+                    />
                     <button type="submit" className={styles.button}>
                       Sign Up
                     </button>
-                  </form>
+                  </Box>
                 </div>
               </div>
             </div>

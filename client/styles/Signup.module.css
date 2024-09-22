@@ -1,99 +1,135 @@
-body[data-theme='light'] .section {
-    background-color: #f9f9f9;
-    color: #000;
-  }
-  
-  body[data-theme='light'] .button {
-    background-color: #e50914;
-  }
-  
-  body[data-theme='light'] .button:hover {
-    opacity: 0.7;
-  }
-  
-  /* Dark Mode */
-  body[data-theme='dark'] .section {
-    background-color: #333;
-    color: #fff;
-  }
-  
-  body[data-theme='dark'] .button {
-    background-color: #e50914;
-  }
-  
-  body[data-theme='dark'] .button:hover {
-    opacity: 0.7;
-  }
-  body[data-theme='dark'] .or span{
-     background-color: rgb(51 51 51);
-    color: #fff;
-  }
- 
- /* Common Styles */
- .sizer{
-    padding: 40px 0px;
- }
- .container{
-    max-width: 1280px;
-    margin: 0 auto;
-  }
-  .row {
-    max-width: 100%;
-    margin: 0px auto;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .heading {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  .input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #fff;
-  }
-  
-  .formGroup {
-    margin-bottom: 20px;
-  }
-  
-
-  
-  
-  .or{
-        position: relative;
-        text-align: center;
-        margin: 20px 0;
-  }
-  .or::before {
-    content: "";
-    position: absolute;
-    left: 0px;
-    top: 50%;
-    width: 100%;
-    height: 1px;
-    border-bottom: 1px solid rgb(225, 225, 225);
+body[data-theme="light"] .section {
+  background-color: #f9f9f9;
+  color: #000;
 }
-.or span{
-    position: relative;
-    display: inline-block;
-    padding: 0px 6px;
-    font-size: 12px;
-    line-height: 20px;
-    font-weight: 500;
-    background-color: rgb(249 249 249);
-    color:#000;
+
+body[data-theme="light"] .button {
+  background-color: #e50914;
+}
+
+body[data-theme="light"] .button:hover {
+  opacity: 0.7;
+}
+body[data-theme="light"] .block_content {
+  background-color: #ffffff;
+  color: #000;
+}
+body[data-theme="light"]
+  .css-1o0kqxp-MuiInputBase-root-MuiOutlinedInput-root:hover
+  .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  border-color: #000000 !important;
+}
+/* Dark Mode */
+body[data-theme="dark"] .section {
+  background-color: #333;
+  color: #fff;
+}
+
+body[data-theme="dark"] .block_content {
+  background-color: #333;
+  color: #fff;
+}
+
+body[data-theme="dark"] .button {
+  background-color: #e50914;
+}
+
+body[data-theme="dark"] .button:hover {
+  opacity: 0.7;
+}
+body[data-theme="dark"] .or span {
+  background-color: rgb(51 51 51);
+  color: #fff;
+}
+body[data-theme="dark"] .css-1o0kqxp-MuiInputBase-root-MuiOutlinedInput-root:hover .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  border-color: #fff !important;
+}
+
+
+/* Common Styles */
+.section {
+  background-image: url("../public/bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+.section .overlay {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  left: 0;
+  background: #00000008;
+  height: 100%;
+}
+.sizer {
+  padding: 120px 0px;
+}
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+.row {
+  max-width: 100%;
+  margin: 0px auto;
+  padding: 20px;
+  border-radius: 10px;
+}
+.signupH {
+  position: absolute;
+  top: -25px;
+  left: 0px;
+  width: 100%;
+  margin: auto;
+}
+.heading {
+  text-align: center;
+  font-size: 24px;
+  background-color: #e50914;
+  padding: 10px 20px;
+  border-radius: 10px;
+  width: 90%;
+  color: #fff;
+  margin: auto;
+}
+
+.button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+  margin-top: 20px;
+}
+
+.block_content {
+  padding: 50px 20px 20px 20px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.or {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+}
+.or::before {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  border-bottom: 1px solid rgb(225, 225, 225);
+}
+.or span {
+  position: relative;
+  display: inline-block;
+  padding: 0px 6px;
+  font-size: 12px;
+  line-height: 20px;
+  font-weight: 500;
+  background-color: rgb(249 249 249);
+  color: #000;
 }
