@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
+require("dotenv").config();
 
-const ws = new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id=your_app_id');
-
+const ws = new WebSocket('wss://ws.binaryws.com/websockets/v3?app_id='+process.env.APP_ID);
 ws.on('open', function open() {
   console.log('WebSocket connected');
   // Example request to Deriv API

@@ -13,7 +13,7 @@ const session = require('express-session');
 const passport = require('passport');
 require('dotenv').config();
 require('../config/passport');  
-
+require('../middlwares/websocket.middlware');
 // predefined middlware
 app.use(cors());
 app.use(urlEncoded);
@@ -23,10 +23,12 @@ app.use(multipart);
 
 // Set up session (required for Passport.js)
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'default_session_secret',  // Use session secret
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: { secure: false }  // Set to true for production with HTTPS
 }));
+
 
 // Initialize Passport.js
 app.use(passport.initialize());
