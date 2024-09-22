@@ -1,16 +1,32 @@
-const express = require("express");
-const userRoute = require("./user.routes");
-// import { checkLogin } from "../modules/commonFunction";
-// import adminRoute from "./admin";
-// import driverRoute from "./driver";
-// import userRoute from "./user";
+const express = require('express');
+const passport = require('passport');
+const userRoute = require('./user.routes');
 
 const router = express.Router();
-// router.use("/v1/driver", checkLogin, driverRoute);
-// router.use("/v1/ride", checkLogin, driverRoute);
-// router.use("/v1/admin", checkLogin, adminRoute);
-router.use("/v1/user", userRoute);
-// router.use("/v1/banner", checkLogin, userRoute);
 
+// Google OAuth Routes
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/' }),
+    (req, res) => {
+        // Successful login, redirect to dashboard or homepage
+        res.redirect('/');
+    }
+);
+
+// Facebook OAuth Routes
+router.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
+
+router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', { failureRedirect: '/' }),
+    (req, res) => {
+        // Successful login, redirect to dashboard or homepage
+        res.redirect('/');
+    }
+);
+
+// User routes
+router.use('/v1/user', userRoute);
 
 module.exports = router;

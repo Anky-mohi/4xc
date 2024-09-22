@@ -15,6 +15,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  googleId: String, // for Google users
+  facebookId: String, // for Facebook users
   role: {
     type: String,
     enum: ['trader', 'admin'],
