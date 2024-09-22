@@ -3,10 +3,10 @@ const app = express();
 const {
     globalErrHandler,
     notFoundErr,
-} = require("../server/middlwares/globalErrHandler");
-const multipart = require('../server/middlwares/multer.middlware');
-const { urlEncoded, jsonEncoded } = require('../server/middlwares/bodyParser.middlware');
-const cors = require('../server/middlwares/cors.middlware');
+} = require("../middlwares/globalErrHandler");
+const multipart = require('../middlwares/multer.middlware');
+const { urlEncoded, jsonEncoded } = require('../middlwares/bodyParser.middlware');
+const cors = require('../middlwares/cors.middlware');
 const path = require("path");
 
 // here all routes file
