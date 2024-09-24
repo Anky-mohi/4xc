@@ -14,7 +14,7 @@ const passport = require('passport');
 require('dotenv').config();
 require('../config/passport');  
 require('../middlwares/websocket.middlware');
-require("../cron/index");
+// require("../cron/index");
 // predefined middlware
 app.use(cors());
 app.use(urlEncoded);

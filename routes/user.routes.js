@@ -4,7 +4,7 @@ const authController = require("../controller/user/auth.controller");
 const {celebrate} = require("celebrate");
 const userValidation = require("../validation/user.validation");
 const { startTrade } = require('../controller/user/user.controller');
-const { getAssetsList } = require('../controller/user/assests.controller');
+const { getListOfAssets, getPrice } = require('../controller/user/assests.controller');
 
 router.post("/auth/register",celebrate({body: userValidation.register}),authController.register)
 router.post("/auth/login",celebrate({body: userValidation.login}),authController.login)
@@ -12,7 +12,8 @@ router.post("/auth/login",celebrate({body: userValidation.login}),authController
 router.post('/trade/start', startTrade);
 
 // assests routes
-// router.route("/assests").get(getAssetsList);
+router.get("/assests",getListOfAssets);
+router.get('/assests/price/:symbol', getPrice);
 
 
 

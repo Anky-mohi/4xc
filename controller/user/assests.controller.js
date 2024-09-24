@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const Asset = require("../../models/assests.model");
+const derivSocket = require('../../config/derivSocket'); // Import the WebSocket connection
 
 
 const fetchAssetsFromDeriv = () => {
@@ -42,8 +43,25 @@ const getListOfAssets = async (req, res) => {
     }
 };
 
+const getPrice = (req, res) => {
+    const { symbol } = req.params;
+
+    // Subscribe to real-time price of a specific asset
+    derivSocket.send(JSON.stringify({
+        "ticks": symbol
+    }));
+
+    derivSocket.on('message', (data) => {
+        const response = JSON.parse(data);
+        if (response.tick) {
+            return res.json({ symbol: response.tick.symbol, price: response.tick.quote });
+        }
+    });
+};
+
 
 module.exports = {
     fetchAssetsFromDeriv,
-    getListOfAssets
+    getListOfAssets,
+    getPrice
 };
