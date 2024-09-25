@@ -8,6 +8,9 @@ import { useRouter } from "next/router";
 const Header = () => {
   const [theme, setTheme] = useState("light");
   const router = useRouter();
+  const handleSignupLogin = ()=>{
+    window.open('https://oauth.deriv.com/oauth2/authorize?app_id=64299', '_self');
+  }
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
@@ -20,6 +23,7 @@ const Header = () => {
     localStorage.setItem("theme", newTheme);
     document.body.setAttribute("data-theme", newTheme);
   };
+   
 
   return (
     <header className="bg-transparent fixed w-full text-white p-4">
@@ -36,7 +40,12 @@ const Header = () => {
           </Link>
         </div>
         <div className="flex items-center">
-        {router.pathname === "/login" && (
+            <button onClick={handleSignupLogin}>
+              <span className="px-4 mr-2.5	 py-2 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
+                SignUp/Login
+              </span>
+            </button>
+        {/* {router.pathname === "/login" && (
             <Link href="/signup">
               <span className="px-4 mr-2.5	 py-2 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                 Sign Up
@@ -49,7 +58,7 @@ const Header = () => {
                 Login
               </span>
             </Link>
-          )}
+          )} */}
           <button onClick={toggleTheme} className="mr-4">
             {theme === "light" ? (
               <svg

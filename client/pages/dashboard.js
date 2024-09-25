@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import styles from "../styles/Dashboard.module.css";
+import DashboardHeader from '../components/dashboardHeader'; 
 
 function Dashboard() {
   const router = useRouter();
@@ -16,6 +17,7 @@ function Dashboard() {
   return (
     <div className="main">
       <div className={`section-dashboard ${styles.section}`}>
+        <DashboardHeader />
         <div className="overlay"></div>
         <div className={styles.sizer}>
           <div className={styles.container}>
