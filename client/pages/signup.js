@@ -27,6 +27,13 @@ export default function Signup() {
       console.error("Signup failed", error);
     }
   };
+  const handleGoogleLogin = () => {
+    window.open('http://localhost:5000/api/auth/google', '_self');
+  };
+  const handleFacebookLogin = () => {
+    window.open('http://localhost:5000/api/auth/facebook', '_self');
+  };
+  
 
   return (
     <div className="main">
@@ -41,7 +48,7 @@ export default function Signup() {
                     <h1 className={styles.heading}>Sign Up</h1>
                   </div>
                   <div className="facebook w-full py-2">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center w-full justify-center">
+                    <button onClick={handleFacebookLogin} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center w-full justify-center">
                       <svg
                         className="w-6 h-6 mr-2 fill-current"
                         xmlns="http://www.w3.org/2000/svg"
@@ -54,7 +61,7 @@ export default function Signup() {
                   </div>
 
                   <div className="google w-full py-2">
-                    <button className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded inline-flex items-center shadow-md w-full justify-center">
+                    <button onClick={handleGoogleLogin} className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded inline-flex items-center shadow-md w-full justify-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-6 h-6 mr-2 fill-current"
