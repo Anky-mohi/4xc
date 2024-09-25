@@ -51,11 +51,24 @@ const getPrice = (req, res) => {
         "ticks": symbol
     }));
 
-    derivSocket.on('message', (data) => {
-        const response = JSON.parse(data);
-        if (response.tick) {
-            return res.json({ symbol: response.tick.symbol, price: response.tick.quote });
+    // Use `once` to listen for the message only once and avoid multiple responses
+    derivSocket.once('message', (data) => {
+        try {
+            const response = JSON.parse(data);
+            if (response.tick) {
+                return res.json({ symbol: response.tick.symbol, price: response.tick.quote });
+            } else {
+                return res.status(404).json({ message: 'No tick data available.' });
+            }
+        } catch (err) {
+            return res.status(500).json({ message: 'Error processing data' });
         }
+    });
+
+    // Handle WebSocket error
+    derivSocket.on('error', (error) => {
+        console.error('WebSocket error:', error);
+        return res.status(500).json({ message: 'WebSocket connection error.' });
     });
 };
 

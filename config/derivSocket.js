@@ -23,4 +23,8 @@ derivSocket.on('close', () => {
     console.log('Disconnected from Deriv WebSocket');
 });
 
+derivSocket.on('error', (error) => {
+    console.error('WebSocket error:', error);
+});
+
 module.exports = derivSocket;
