@@ -73,6 +73,9 @@ const getPrice = (req, res) => {
 };
 
 
+  
+
+
 module.exports = {
     fetchAssetsFromDeriv,
     getListOfAssets,
