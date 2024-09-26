@@ -26,3 +26,6 @@ header{
 width: 100%; 
 justify-content: center;
 }
+.fixed{
+    z-index: 11;
+}

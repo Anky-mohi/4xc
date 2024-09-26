@@ -5,6 +5,7 @@ import Popup from './Popup';
 import Link from "next/link";
 import Image from "next/image";
 import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import AddIcon from '@mui/icons-material/Add';
 
 function DashboardHeader() {
   const dispatch = useDispatch();
@@ -24,10 +25,15 @@ function DashboardHeader() {
               className="mr-2"
             />
           </Link>
-          <ViewModuleIcon sx={{ fontSize: 50 }} onClick = {popUpToggle}/> 
-        </div>
+          <ViewModuleIcon sx={{ fontSize: 50, marginLeft:"20px" }} /> 
+          <div style={{ marginLeft:"20px"}} >
+            <h1>WLDAUD</h1>
+          </div>
+          <div className = "plusicon" style={{cursor:"pointer", marginLeft:"20px"}} onClick = {popUpToggle}>
+            <AddIcon sx={{ fontSize: 50 }}/>
+          </div>
 
-        
+        </div>
         <div className="flex items-center">
         </div>
       </nav>
