@@ -40,23 +40,10 @@ body[data-theme="light"] .section {
   
   
   /* Common Styles */
-  .section {
-    background-image: url("../public/bg.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    position: relative;
-  }
-  .section .overlay {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    z-index: 1;
-    left: 0;
-    background: #00000008;
-    height: 100%;
-  }
+ 
   .sizer {
     padding: 120px 0px;
+    background-color: #000000b5;
   }
   .container {
     max-width: 1280px;
@@ -80,6 +67,12 @@ body[data-theme="light"] .section {
     margin: auto;
   }
   
+ 
+  .left_side_bar{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
  
   
   .block_content {

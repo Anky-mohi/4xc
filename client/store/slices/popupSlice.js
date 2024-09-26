@@ -15,6 +15,8 @@ export const fetchPopupData = createAsyncThunk(
         data: [], 
         loading: false,
         error: null,
+        searchTerm: "", // Redux state for search term
+        tabValue: "commodities", // Redux state for current tab value
     },
     reducers: {
         showPopup:(state)=>{
@@ -22,7 +24,13 @@ export const fetchPopupData = createAsyncThunk(
         },
         hidePopup:(state)=>{
             state.isVisible = false;
-        }
+        },
+        setSearchTerm: (state, action) => {
+            state.searchTerm = action.payload;
+          },
+          setTabValue: (state, action) => {
+            state.tabValue = action.payload;
+          }
     },
     extraReducers: (builder)=> {
         builder
@@ -41,6 +49,6 @@ export const fetchPopupData = createAsyncThunk(
     }
   })
 
-  export const { showPopup, hidePopup } = popupSlice.actions;
+  export const { showPopup, hidePopup , setSearchTerm, setTabValue } = popupSlice.actions;
 
   export default popupSlice.reducer;
