@@ -16,7 +16,7 @@ export const fetchPopupData = createAsyncThunk(
         loading: false,
         error: null,
         searchTerm: "", // Redux state for search term
-        tabValue: "commodities", // Redux state for current tab value
+        tabValue: "popular", // Redux state for current tab value
     },
     reducers: {
         showPopup:(state)=>{

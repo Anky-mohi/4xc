@@ -14,6 +14,8 @@ import HelpCenterIcon from "@mui/icons-material/HelpCenter";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 // icons end
 
 // chart start 
@@ -39,9 +41,9 @@ function Dashboard() {
       const chart = createChart(chartContainer, chartOptions);
 
       const areaSeries = chart.addAreaSeries({
-        lineColor: '#2962FF',
-        topColor: '#2962FF',
-        bottomColor: 'rgba(41, 98, 255, 0.28)',
+        lineColor: '#fff',
+        topColor: '#b6b6b6',
+        bottomColor: '#b6b6b621',
       });
 
       areaSeries.setData([
@@ -115,8 +117,8 @@ function Dashboard() {
             {/* Right Sidebar (Buy/Sell Buttons) */}
             <div className="w-1/12 flex  items-center">
               <div className="right_side_bar flex flex-col justify-start" style={{gap:"20px"}}>
-                <Button variant="contained" color="success">Buy</Button>
-                <Button variant="contained" color="error">Sell</Button>
+                <Button className = "py-7 px-6 font-extrabold" variant="contained" color="success"><TrendingUpIcon/>Higher</Button>
+                <Button className = "py-7 px-6 font-extrabold" variant="contained" color="error"><TrendingDownIcon/>Lower</Button>
               </div>
             </div>
           </div>
