@@ -56,7 +56,9 @@ const assetSchema = new mongoose.Schema({
     symbol_type: {
         type: String,
         required: true
-    }
+    },
+    spot: Number,
+    spot_time: Number
 },
 {timestamps: true}
 );

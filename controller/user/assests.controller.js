@@ -8,7 +8,7 @@ const fetchAssetsFromDeriv = () => {
         const wsDeriv = new WebSocket(`wss://ws.binaryws.com/websockets/v3?app_id=${process.env.APP_ID}`);
     
         wsDeriv.on('open', () => {
-            wsDeriv.send(JSON.stringify({ active_symbols: 'brief', product_type: 'basic' }));
+            wsDeriv.send(JSON.stringify({ active_symbols: 'full', product_type: 'basic' }));
         });
     
         wsDeriv.on('message', (data) => {

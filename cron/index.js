@@ -3,7 +3,7 @@ const { fetchAssetsFromDeriv} = require("../controller/user/assests.controller")
 const Asset = require("../models/assests.model");
 
 // Schedule a task to run every minute
-cron.schedule('* * * * *', async () => {
+cron.schedule('* * * * * *', async () => {
     console.log("Cron job started...");
     
     try {
