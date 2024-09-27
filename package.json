@@ -26,6 +26,7 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "rajesh4xc": "file:",
+    "socket.io": "^4.8.0",
     "ws": "^8.18.0"
   }
 }
