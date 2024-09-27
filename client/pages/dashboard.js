@@ -34,7 +34,7 @@ function Dashboard() {
 
   useEffect(() => {
     const chartContainer = document.getElementById('main_chart_container_1');
-    if (chartContainer && !chartRef.current) { // Ensure only one chart is created
+    if (chartContainer && !chartRef.current) {
       const chartOptions = {
         layout: { textColor: 'white', background: { type: 'solid', color: 'transparent' } },
       };
@@ -60,12 +60,12 @@ function Dashboard() {
       ]);
 
       chart.timeScale().fitContent();
-      chartRef.current = chart; // Store chart instance
+      chartRef.current = chart; 
     }
 
     return () => {
       if (chartRef.current) {
-        chartRef.current.remove(); // Clean up chart when component unmounts
+        chartRef.current.remove(); 
         chartRef.current = null;
       }
     };
@@ -78,7 +78,7 @@ function Dashboard() {
         <div className={styles.sizer}>
           <div className={`flex justify-between ${styles.container}`}>
             {/* Left Sidebar */}
-            <div className="w-1/12 flex  items-center">
+            <div className=" flex  items-center">
               <div className="left_side_bar">
                 <div className="icon_content">
                   <BusinessCenterIcon style={{ color: "#fff" }} />
@@ -115,7 +115,7 @@ function Dashboard() {
             </div>
 
             {/* Right Sidebar (Buy/Sell Buttons) */}
-            <div className="w-1/12 flex  items-center">
+            <div className="flex  items-center">
               <div className="right_side_bar flex flex-col justify-start" style={{gap:"20px"}}>
                 <Button className = "py-7 px-6 font-extrabold" variant="contained" color="success"><TrendingUpIcon/>Higher</Button>
                 <Button className = "py-7 px-6 font-extrabold" variant="contained" color="error"><TrendingDownIcon/>Lower</Button>

@@ -6,6 +6,7 @@ import {
   fetchPopupData,
   setSearchTerm,
   setTabValue,
+  setSelectedAsset
 } from "../store/slices/popupSlice";
 import Paper from "@mui/material/Paper";
 import InputBase from "@mui/material/InputBase";
@@ -84,6 +85,11 @@ function Popup() {
 
   if (!isVisible) return null;
 
+  const handleSelectAsset = (displayName) => {
+    dispatch(setSelectedAsset(displayName));
+    dispatch(hidePopup()); 
+  };
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
       <div
@@ -135,7 +141,7 @@ function Popup() {
             </Box>
             <TabPanel value={tabValue}>
               {topAssets.length > 0 ? (
-                <div>
+                <div className = "cursor-pointer">
                   <div className="text-white"
                     style={{
                       display: "flex",
@@ -156,6 +162,7 @@ function Popup() {
                         padding: "8px 0",
                         borderBottom: "1px solid #e0e0e0",
                       }}
+                      onClick={() => handleSelectAsset(el.symbol)}
                     >
                       <span className="flex items-center gap-5 text-white">
                         {tabValue === "popular" ? (
