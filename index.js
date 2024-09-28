@@ -6,7 +6,7 @@ const express = require("express");
 require("./config/dbConnect");
 require("./config/derivSocket");
 
-const app = express();
+const app = require("./app/app");
 const PORT = process.env.PORT || 3800;
 const server = http.createServer(app);
 
