@@ -31,7 +31,7 @@ function DashboardHeader() {
             />
           </Link>
           <ViewModuleIcon sx={{ fontSize: 50, marginLeft: "20px" }} />
-          <div className = "flex justify-center items-center gap-3" style={{ marginLeft: "20px" }}>
+          <div className = "flex justify-start flex-wrap items-center gap-3" style={{ marginLeft: "20px" }}>
             {selectedAssets.map((asset, index) => (
             <span key={index} className="text-white">
               <a
