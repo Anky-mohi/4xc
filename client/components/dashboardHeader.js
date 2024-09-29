@@ -31,18 +31,17 @@ function DashboardHeader() {
             />
           </Link>
           <ViewModuleIcon sx={{ fontSize: 50, marginLeft: "20px" }} />
-          <div className = "flex justify-center items-center gap-3" style={{ marginLeft: "20px" }}>
+          <div className = "flex justify-start flex-wrap items-center gap-3" style={{ marginLeft: "20px" }}>
             {selectedAssets.map((asset, index) => (
             <span key={index} className="text-white">
-              <a
-                href="#"
-                class="flex justify-center items-center gap-2 px-4 py-3 dark:bg-indigo-900 dark:text-indigo-300 rounded-lg active"
+              <button
+                className="flex justify-center items-center gap-2 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 aria-current="page"
               >
                 <span class="text-white">{asset ? `${asset}` : "WLDAUD"}</span>
                 <span onClick={() => handleRemoveAsset(asset)}>
                   <svg
-                    class="w-3 h-3"
+                    className="w-3 h-3"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="#fff"
@@ -57,7 +56,7 @@ function DashboardHeader() {
                     />
                   </svg>
                 </span>
-              </a>
+              </button>
             </span>
             )) }
           </div>

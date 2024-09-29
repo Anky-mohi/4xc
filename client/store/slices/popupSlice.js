@@ -17,7 +17,7 @@ const popupSlice = createSlice({
     error: null,
     searchTerm: "",
     tabValue: "popular",
-    selectedAssets: ["stpRNG4"],
+    selectedAssets: ["BOOM300N"],
   },
   reducers: {
     showPopup: (state) => {

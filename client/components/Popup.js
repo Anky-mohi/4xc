@@ -150,8 +150,9 @@ function Popup() {
                       marginBottom: "10px",
                     }}
                   >
-                    <span>Display Name</span>
-                    <span>Symbol</span>
+                    <span className = "text-left w-56">Display Name</span>
+                    <span className = "text-left w-40">Price</span>
+                    <span className = "text-left w-40">Symbol</span>
                   </div>
                   {topAssets.map((el) => (
                     <div
@@ -164,7 +165,7 @@ function Popup() {
                       }}
                       onClick={() => handleSelectAsset(el.symbol)}
                     >
-                      <span className="flex items-center gap-5 text-white">
+                      <span className="flex items-center flex-wrap gap-5 text-white text-left w-56">
                         {tabValue === "popular" ? (
                           <Image
                             priority
@@ -178,7 +179,10 @@ function Popup() {
                         )}
                         {el.display_name}
                       </span>
-                      <span className="text-white">
+                      <span className="text-white text-left w-40">
+                        {el.spot}
+                        </span>
+                      <span className="text-white text-left w-40">
                         {el.symbol}
                         <span
                           className="text-2xl cursor-pointer ml-2"
