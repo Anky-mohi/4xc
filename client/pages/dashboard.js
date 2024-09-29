@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
 import styles from "../styles/Dashboard.module.css";
 import DashboardHeader from "../components/dashboardHeader";
 import Button from "@mui/material/Button";
@@ -12,19 +11,13 @@ import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
-import { createChart } from "lightweight-charts";
-import io from 'socket.io-client';
+import Chart from '../components/chart'
 
-const socket = io('http://localhost:5000');
 
 function Dashboard() {
   const router = useRouter();
-  const chartRef = useRef(null);
   
-  const selectedAssets = useSelector((state) => state.popup.selectedAssets);
-  const assetToTrack = selectedAssets.length > 0 ? selectedAssets[selectedAssets.length-1] : null; 
   
-  const [dataPoints, setDataPoints] = React.useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -33,77 +26,8 @@ function Dashboard() {
     }
   }, [router]);
 
-  useEffect(() => {
-    if (!assetToTrack) return;
 
-    socket.emit('joinAssetRoom', assetToTrack);
-    
-    socket.on('assetData', (data) => {
-      console.log('Received live data:', data);
-      
-      const newPoint = {
-        time: data.epoch,
-        value: data.quote
-      };
-      
-      setDataPoints((prevPoints) => {
-        const lastPoint = prevPoints[prevPoints.length - 1];
-        if (!lastPoint || newPoint.time > lastPoint.time) {
-          const updatedPoints = [...prevPoints, newPoint];
-          
-          updatedPoints.sort((a, b) => a.time - b.time);
-          
-          return updatedPoints;
-        }
-        return prevPoints;
-      });
-    });
 
-    return () => {
-      socket.emit('leaveAssetRoom', assetToTrack);
-      socket.off('assetData');
-    };
-  }, [assetToTrack]); 
-
-  useEffect(() => {
-    const chartContainer = document.getElementById("main_chart_container_1");
-    if (chartContainer && !chartRef.current) {
-      const chartOptions = {
-        layout: {
-          textColor: "white",
-          background: { type: "solid", color: "transparent" },
-        },
-        grid: {
-          vertLines: { color: "#444" },
-          horzLines: { color: "#444" },
-        },
-      };
-
-      const chart = createChart(chartContainer, chartOptions);
-      const areaSeries = chart.addAreaSeries({
-        lineColor: "#fff",
-        topColor: "#b6b6b6",
-        bottomColor: "#b6b6b621",
-      });
-
-      // Initialize the chart with the first set of data points
-      areaSeries.setData(dataPoints);
-      chartRef.current = chart;
-
-      // Update chart data whenever dataPoints changes
-      areaSeries.setData(dataPoints);
-
-      // Fit chart to content
-      chart.timeScale().fitContent();
-    }
-
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.remove();
-        chartRef.current = null;
-      }
-    };
-  }, [dataPoints]); // Re-run effect when dataPoints changes
 
   return (
     <div className="main">
@@ -149,11 +73,7 @@ function Dashboard() {
             </div>
 
             {/* Chart in the middle */}
-            <div className="w-10/12">
-              <div className={styles.block_content}>
-                <div id="main_chart_container_1" className={styles.chartContainer}></div>
-              </div>
-            </div>
+            <Chart/>
 
             {/* Right Sidebar (Buy/Sell Buttons) */}
             <div className="flex items-center">
