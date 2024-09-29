@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 function Chart() {
     const chartRef = useRef(null);
   const selectedAssets = useSelector((state) => state.popup.selectedAssets);
-  const assetToTrack = selectedAssets.length > 0 ? selectedAssets[selectedAssets.length-1] : null; 
+  const assetToTrack = selectedAssets.length > 0 ? selectedAssets[selectedAssets.length-1] : selectedAssets[0]; 
   const [dataPoints, setDataPoints] = React.useState([]);
 
   useEffect(() => {
