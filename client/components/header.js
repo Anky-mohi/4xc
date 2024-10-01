@@ -8,9 +8,10 @@ import { useRouter } from "next/router";
 const Header = () => {
   const [theme, setTheme] = useState("light");
   const router = useRouter();
-  const handleSignupLogin = ()=>{
-    window.open('https://oauth.deriv.com/oauth2/authorize?app_id=64299', '_self');
-  }
+  const [showIframe, setShowIframe] = useState(false);
+  const handleSignupLogin = () => {
+    setShowIframe(true);
+  };
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
@@ -59,6 +60,7 @@ const Header = () => {
               </span>
             </Link>
           )} */}
+          
           <button onClick={toggleTheme} className="mr-4">
             {theme === "light" ? (
               <svg
@@ -120,6 +122,12 @@ const Header = () => {
           </button>
         </div>
       </nav>
+      {showIframe && (
+        <iframe
+          src="https://oauth.deriv.com/oauth2/authorize?app_id=64437"
+          style={{ width: '500px', height: '600px', border: 'none' }}
+        ></iframe>
+      )}
     </header>
   );
 };

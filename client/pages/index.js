@@ -4,7 +4,7 @@
 const Home = () => {
   return (
     <div>
-      <main className="p-4">
+      <main className="p-4" style={{paddingTop:"100px"}}>
         <h1 className="text-2xl font-bold">Welcome to MySite!</h1>
         <p>This is the home page content.</p>
       </main>
