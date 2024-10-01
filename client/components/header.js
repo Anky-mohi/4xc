@@ -1,12 +1,13 @@
 // components/Header.js
 
-import { useEffect, useState } from "react";
+import { useEffect, useState , useRef} from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter  } from "next/router";
 
 const Header = () => {
   const [theme, setTheme] = useState("light");
+  const IframUrl = useRef(null);
   const router = useRouter();
   const [showIframe, setShowIframe] = useState(false);
   const handleSignupLogin = () => {
@@ -17,7 +18,12 @@ const Header = () => {
     setTheme(savedTheme);
     document.body.setAttribute("data-theme", savedTheme);
   }, []);
-
+  useEffect(() => {
+    if (IframUrl.current) {
+      const iframeSrc = IframUrl.current.src;
+      console.log('Iframe URL:', iframeSrc);  // You can store or use this URL as needed
+    }
+  }, []);
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
@@ -125,6 +131,8 @@ const Header = () => {
       {showIframe && (
         <iframe
           src="https://oauth.deriv.com/oauth2/authorize?app_id=64437"
+          ref={IframUrl}
+          onLoad={console.log(IframUrl.current?.src)}
           style={{ width: '500px', height: '600px', border: 'none' }}
         ></iframe>
       )}
