@@ -78,6 +78,8 @@ function Dashboard() {
             {/* Right Sidebar (Buy/Sell Buttons) */}
             <div className="flex items-center">
               <div className="right_side_bar flex flex-col justify-start" style={{ gap: "20px" }}>
+              <div></div>
+              <div className="text-white flex-column items-center">Profit<br/><span className="text-5xl text-white">50%</span><br/>$50</div>
                 <Button className="py-7 px-6 font-extrabold bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800" variant="contained">
                   <TrendingUpIcon />
                   Higher

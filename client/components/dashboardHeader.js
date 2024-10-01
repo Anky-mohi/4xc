@@ -7,8 +7,15 @@ import Link from "next/link";
 import Image from "next/image";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
 import AddIcon from "@mui/icons-material/Add";
+import { Button } from "@mui/material";
+import { ArrowDropDown, CurrencyExchange, Person, PersonPinCircleOutlined } from "@mui/icons-material";
+import { useState } from "react";
 
 function DashboardHeader() {
+
+  const [userMenu, setUserMenu]=useState(false);
+  const [balance, setBalance]=useState(false);
+
   const dispatch = useDispatch();
   const popUpToggle = () => {
     dispatch(showPopup());
@@ -17,6 +24,15 @@ function DashboardHeader() {
   const handleRemoveAsset = (asset) => {
     dispatch(removeSelectedAsset(asset));
   };
+
+  const showUser=()=>{
+    setUserMenu(!userMenu)
+  }
+
+  const showBalance=()=>{
+    setBalance(!balance)
+  }
+
   return (
     <header className="bg-transparent fixed w-full text-white p-4">
       <nav className="bg-color flex justify-between">
@@ -68,7 +84,43 @@ function DashboardHeader() {
             <AddIcon sx={{ fontSize: 50 }} />
           </div>
         </div>
-        <div className="flex items-center"></div>
+        <div className="flex items-center gap-5">
+            <div className="relative user cursor-pointer" onClick={showUser}>
+              <Person sx={{ fontSize: 50, marginLeft: "20px", background:"gray", borderRadius:"50%" }}/>
+              <ArrowDropDown sx={{ fontSize: 30 }} />
+              {userMenu && 
+              <>
+                <div className="absolute w-[200px] font-normal bg-[#363c4f] text-sm text-white top-89 p-5">
+                  <h2>This is user menu</h2>
+                </div>
+              </> 
+            }
+            </div>
+            
+          <div className="relative balance text-2xl cursor-pointer text-orange-600 font-bold" onClick={showBalance}>
+            $2,093.00 <ArrowDropDown sx={{ fontSize: 30 }}/>
+            {balance && 
+              <>
+              <div className="absolute w-[300px] font-normal flex flex-row bg-[#363c4f] text-sm text-white top-9 p-5">
+                  <div>
+                    <p>Investment....... $0</p>
+                    <p>Available....... $2,093.00</p>
+                  </div>
+                  <div className="flex-column">
+                    <div className="p-4 bg-blue-400">
+                      How are you
+                    </div>
+                    <div className="p-4">
+                      This is test
+                    </div>
+                  </div>
+              </div>
+              </>
+              }
+          </div>
+          
+          <Button className="border-2 border-solid hover:bg-green-500 hover:text-white border-green-500 text-green-500 px-5 py-3"><CurrencyExchange/> <span className="pl-3 text-lg">Deposit</span></Button>
+        </div>
       </nav>
       <Popup />
     </header>
