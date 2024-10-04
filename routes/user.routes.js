@@ -20,6 +20,11 @@ router.post(
   authController.register
 );
 router.post(
+  "/auth/verifyOtp",
+  // celebrate({ body: userValidation.register }),
+  authController.verifyOtp
+);
+router.post(
   "/auth/login",
   celebrate({ body: userValidation.login }),
   authController.login
