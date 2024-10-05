@@ -10,9 +10,7 @@ const Header = () => {
   const IframUrl = useRef(null);
   const router = useRouter();
   const [showIframe, setShowIframe] = useState(false);
-  const handleSignupLogin = () => {
-    setShowIframe(true);
-  };
+ 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
@@ -47,11 +45,7 @@ const Header = () => {
           </Link>
         </div>
         <div className="flex items-center">
-            <button onClick={handleSignupLogin}>
-              <span className="px-4 mr-2.5	 py-2 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
-                SignUp/Login
-              </span>
-            </button>
+        
         {/* {router.pathname === "/login" && (
             <Link href="/signup">
               <span className="px-4 mr-2.5	 py-2 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
@@ -59,14 +53,21 @@ const Header = () => {
               </span>
             </Link>
           )}
+          */}
           {router.pathname === "/signup" && (
             <Link href="/login">
               <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                 Login
               </span>
             </Link>
-          )} */}
-          
+          )} 
+          {router.pathname === "/thankyou" && (
+            <Link href="/dashboard">
+              <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
+                dashboard
+              </span>
+            </Link>
+          )} 
           <button onClick={toggleTheme} className="mr-4">
             {theme === "light" ? (
               <svg
@@ -128,14 +129,7 @@ const Header = () => {
           </button>
         </div>
       </nav>
-      {showIframe && (
-        <iframe
-          src="https://oauth.deriv.com/oauth2/authorize?app_id=64437"
-          ref={IframUrl}
-          onLoad={console.log(IframUrl.current?.src)}
-          style={{ width: '500px', height: '600px', border: 'none' }}
-        ></iframe>
-      )}
+      
     </header>
   );
 };
