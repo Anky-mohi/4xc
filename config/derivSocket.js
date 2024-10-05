@@ -2,7 +2,7 @@
 const WebSocket = require("ws");
 
 const derivSocket = new WebSocket(
-  "wss://ws.binaryws.com/websockets/v3?app_id=64437"
+  "wss://ws.binaryws.com/websockets/v3?app_id=64508"
 );
 
 derivSocket.on("open", () => {

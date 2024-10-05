@@ -102,7 +102,7 @@ const sendVerificationRequest = (email, token, res) => {
 
     // Ensure only one response is sent
     if (response.error) {
-      console.error("Verification failed:", response.error);
+      // console.error("Verification failed:", response.error);
       if (!res.headersSent) {
         return res.status(500).json({
           message: response.error.message,
@@ -110,7 +110,7 @@ const sendVerificationRequest = (email, token, res) => {
         });
       }
     } else {
-      console.log("Verification successful:", response);
+      // console.log("Verification successful:", response);
       if (!res.headersSent) {
         return res.json({
           token: token,
@@ -123,13 +123,13 @@ const sendVerificationRequest = (email, token, res) => {
 };
 
 // Function to create a new virtual-money account after verification
-const createVirtualAccount = async (data, res) => {
+const createVirtualAccount = async (tokenData, res) => {
   const virtualAccountPayload = {
     new_account_virtual: 1,
     type: "trading",
-    client_password: data.password, // Replace with the user's actual password
-    residence: "IN", // Replace with user's residence (country code)
-    verification_code: data.code, // Use the actual verification code received from email
+    client_password: tokenData.password, // Replace with the user's actual password
+    residence: "in", // Replace with user's residence (country code)
+    verification_code: tokenData.code, // Use the actual verification code received from email
   };
 
   // Send the virtual account creation request
@@ -139,11 +139,11 @@ const createVirtualAccount = async (data, res) => {
   // Listen for the response from the WebSocket
   derivSocket.once("message", async (data) => {
     const response = JSON.parse(data);
-    console.log("Virtual account response:", response);
+    // console.log("Virtual account response:", response);
 
     // Handle response for virtual account creation
     if (response.error) {
-      console.error("Virtual account creation failed:", response.error);
+      // console.error("Virtual account creation failed:", response.error);
       if (!res.headersSent) {
         return res.status(500).json({
           message: response.error.message,
@@ -151,15 +151,15 @@ const createVirtualAccount = async (data, res) => {
         });
       }
     } else {
-      console.log("Virtual account created successfully:", response);
-      await User.create({
-        username: data.username,
-        email: data.email,
-        password: data.password,
-      });
+      // console.log("Virtual account created successfully:", response);
+      const abcd = {
+        username: tokenData.username,
+        email: tokenData.email,
+        password: tokenData.password,
+      };
+      await User.create(abcd);
       if (!res.headersSent) {
         return res.json({
-          token: token,
           message: "Virtual account created successfully!",
           status: 1,
         });

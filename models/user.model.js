@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     },
     residence: {
       type: String,
-      default: "IN",
+      default: "in",
     },
     password: {
       type: String,
