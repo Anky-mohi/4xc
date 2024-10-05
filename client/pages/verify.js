@@ -21,7 +21,7 @@ export default function Verify() {
       },
       {
         headers: {
-            "x-auth-token": `${localStorage.getItem("signToken")}`, 
+            "x-auth-token": localStorage.getItem("signToken"), 
         },
       },);
 
