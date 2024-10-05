@@ -8,6 +8,8 @@ import TextField from "@mui/material/TextField";
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   const router = useRouter();
 
   const handleSignup = async (e) => {
@@ -34,6 +36,23 @@ export default function Signup() {
       // Optionally show error to the user
     }
   };
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+
+    // Regular expression for password validation
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!passwordRegex.test(newPassword)) {
+      setPasswordError(
+        "Password must contain at least 8 characters, one uppercase letter, one number, and one special character."
+      );
+    } else {
+      setPasswordError(""); // Clear error if password is valid
+    }
+  };
+
 
   const handleGoogleLogin = () => {
     window.open('http://localhost:5000/api/auth/google', '_self');
@@ -146,7 +165,9 @@ export default function Signup() {
                       variant="outlined"
                       margin="normal"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={handlePasswordChange}
+                      error={!!passwordError}
+                      helperText={passwordError}
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           color: "#e50914",

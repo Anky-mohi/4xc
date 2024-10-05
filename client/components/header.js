@@ -67,6 +67,13 @@ const Header = () => {
                 dashboard
               </span>
             </Link>
+          )}
+          {router.pathname === "/" && (
+            <Link href="/signup">
+              <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
+                signup
+              </span>
+            </Link>
           )} 
           <button onClick={toggleTheme} className="mr-4">
             {theme === "light" ? (
