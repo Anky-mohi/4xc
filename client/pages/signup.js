@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import styles from "../styles/Signup.module.css";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-
 export default function Signup() {
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -15,25 +13,35 @@ export default function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/signup", {
-        username,
+      const response = await axios.post("http://localhost:5000/api/v1/user/auth/register", {
         email,
         password,
       });
-      if (response.data.success) {
-        router.push("/dashboard"); 
+
+      // Check for successful response
+      if (response.data.status === 1) {
+        // Redirect on success (after verifying email)
+        localStorage.setItem("signToken", response.data.token.token)
+        router.push("/verify"); 
+      } else {
+        // Handle verification failure
+        localStorage.setItem("signToken", response.data.token.token)
+        router.push("/verify"); 
+        console.error("Signup failed:", response.data.message);
       }
     } catch (error) {
       console.error("Signup failed", error);
+      // Optionally show error to the user
     }
   };
+
   const handleGoogleLogin = () => {
     window.open('http://localhost:5000/api/auth/google', '_self');
   };
+
   const handleFacebookLogin = () => {
-    window.open('http://localhost:5000/api/auth/facebook', '_self');
+    window.open('http://localhost:5000/api/auth/facebook', '_self');
   };
-  
 
   return (
     <div className="main">
@@ -92,45 +100,6 @@ export default function Signup() {
                     <span>OR</span>
                   </div>
                   <Box component="form" fullWidth noValidate autoComplete="off" onSubmit={handleSignup}>
-                    <TextField
-                      fullWidth
-                      id="username"
-                      label="Username"
-                      variant="outlined"
-                      margin="normal"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          color: "#e50914",
-                          fontFamily: "Arial",
-                          fontWeight: "bold",
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "#e50914",
-                            borderWidth: "2px",
-                          },
-                          "&.Mui-focused": {
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#e50914",
-                              borderWidth: "2px",
-                            },
-                          },
-                          "&:hover:not(.Mui-focused)": {
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#e50914",
-                            },
-                          },
-                        },
-                        "& .MuiInputLabel-outlined": {
-                          color: "#e50914",
-                          fontWeight: "bold",
-                          "&.Mui-focused": {
-                            color: "#e50914",
-                            fontWeight: "bold",
-                          },
-                        },
-                      }}
-                    />
                     <TextField
                       fullWidth
                       id="email"
@@ -209,9 +178,14 @@ export default function Signup() {
                         },
                       }}
                     />
-                    <button type="submit" className={styles.button}>
-                      Sign Up
-                    </button>
+                    <div className="my-6">
+                      <button
+                        type="submit"
+                        className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full"
+                      >
+                        Create Account
+                      </button>
+                    </div>
                   </Box>
                 </div>
               </div>

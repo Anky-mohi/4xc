@@ -29,3 +29,22 @@ justify-content: center;
 .fixed{
     z-index: 11;
 }
+h1{
+    font-size:54px;
+}
+h2{
+    font-size:45;
+}
+h3{
+    font-size:36;
+}
+h4{
+    font-size:28;
+}
+h5{
+    font-size:24px;
+}
+h6{
+    font-size:20px;
+}
+
