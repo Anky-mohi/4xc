@@ -29,6 +29,7 @@ router.post(
   celebrate({ body: userValidation.login }),
   authController.login
 );
+router.post("/auth/deriv/login", authController.loginWithDerivToken);
 // Trading route
 // router.post('/trade/start', startTrade);
 

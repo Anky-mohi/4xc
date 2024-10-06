@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    fullname: String,
     residence: {
       type: String,
       default: "in",
@@ -27,25 +28,34 @@ const userSchema = new mongoose.Schema(
       enum: ["trader", "admin"],
       default: "trader",
     },
-    derivAccounts: [
-      {
-        accountId: String,
-        token: String,
-        currency: String,
-      },
-    ],
-    wallet: {
-      balance: { type: Number, default: 1000 }, // Default balance of 1000 practice units
-      isReloadAllowed: { type: Boolean, default: true }, // Track if reload is allowed (e.g. once a day)
-      lastReloadTime: { type: Date }, // Track the last reload time
-    },
-    kycStatus: {
-      isVerified: { type: Boolean, default: false }, // KYC verification status
-      documents: {
-        idProof: String,
-        addressProof: String,
-      },
-    },
+    loginid: String,
+    balance: Number,
+    account_type: String,
+    account_category: String,
+    is_virtual: Number,
+    currency: String,
+    country: String,
+    preferred_language: String,
+    user_id: String,
+    // derivAccounts: [
+    //   {
+    //     accountId: String,
+    //     token: String,
+    //     currency: String,
+    //   },
+    // ],
+    // wallet: {
+    //   balance: { type: Number, default: 1000 }, // Default balance of 1000 practice units
+    //   isReloadAllowed: { type: Boolean, default: true }, // Track if reload is allowed (e.g. once a day)
+    //   lastReloadTime: { type: Date }, // Track the last reload time
+    // },
+    // kycStatus: {
+    //   isVerified: { type: Boolean, default: false }, // KYC verification status
+    //   documents: {
+    //     idProof: String,
+    //     addressProof: String,
+    //   },
+    // },
     // documents: [{
     //   type: String, // URLs of uploaded documents
     // }],

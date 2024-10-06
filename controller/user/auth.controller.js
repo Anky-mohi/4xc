@@ -83,6 +83,25 @@ exports.verifyOtp = async (req, res) => {
   //   res.status(500).json({ msg: "Server error" });
   // }
 };
+
+exports.loginWithDerivToken = async (req, res) => {
+  try {
+    const { token, account, currency } = req.body;
+    if (derivSocket.readyState === 1) {
+      authorize(token, res);
+    } else {
+      derivSocket.on("open", () => {
+        authorize(token, res);
+      });
+    }
+    console.log(derivSocket.readyState, "kkkkkk");
+  } catch (err) {
+    return res.status(500).json({
+      message: "internal server error",
+      status: 0,
+    });
+  }
+};
 // Function to send verification request through WebSocket
 const sendVerificationRequest = (email, token, res) => {
   // Define the verification request payload
@@ -167,3 +186,53 @@ const createVirtualAccount = async (tokenData, res) => {
     }
   });
 };
+
+// Function to authorize with the Deriv API
+function authorize(token, res) {
+  const authRequest = {
+    authorize: token,
+  };
+  derivSocket.send(JSON.stringify(authRequest));
+  derivSocket.once("message", async (data) => {
+    const response = JSON.parse(data);
+    // console.log("Virtual account response:", response);
+
+    // Handle response for virtual account creation
+    if (response.error) {
+      // console.error("Virtual account creation failed:", response.error);
+      if (!res.headersSent) {
+        return res.status(500).json({
+          message: response.error.message,
+          status: 0,
+        });
+      }
+    } else {
+      console.log("Virtual account login successfully:", response);
+      const data = {
+        login_id: response.authorize.loginid,
+        balance: response.authorize.balance,
+        // email: response.email,
+        full_name: response.authorize.fullname,
+        account_type: response.authorize.account_list[0].account_type, // Using account_list for account_type
+        account_category: response.authorize.account_list[0].account_category, // Using account_list for account_category
+        is_virtual: response.authorize.is_virtual,
+        currency: response.authorize.currency,
+        country: response.authorize.country,
+        preferred_language: response.authorize.preferred_language,
+        deriv_user_id: response.authorize.user_id,
+      };
+      const updateUser = await User.findOneAndUpdate(
+        { email: response.authorize.email },
+        data,
+        { new: true }
+      );
+      if (!res.headersSent) {
+        return res.json({
+          data: updateUser,
+          message: "Virtual account login successfully!",
+          status: 1,
+        });
+      }
+    }
+  });
+}
