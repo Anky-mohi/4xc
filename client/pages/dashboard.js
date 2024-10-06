@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+import { useSelector } from 'react-redux';
 import styles from "../styles/Dashboard.module.css";
 import DashboardHeader from "../components/dashboardHeader";
 import Button from "@mui/material/Button";
@@ -11,20 +12,34 @@ import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
-import Chart from '../components/chart'
+import Chart from '../components/chart';
+import axios from 'axios'; 
 
 
 function Dashboard() {
   const router = useRouter();
   
+  const apiData = useSelector((state) => state.data.apiData);
   
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      router.push("/login");
+    if(!apiData){
+      router.push("/login"); 
     }
-  }, [router]);
+    const fetchData = async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/api/v1/user/auth/deriv/login", {
+          data: apiData,
+        });
+        console.log("API Response:", response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+      fetchData();
+
+  }, [router, apiData]);
 
 
 
