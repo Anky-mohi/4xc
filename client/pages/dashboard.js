@@ -23,21 +23,21 @@ function Dashboard() {
   
 
   useEffect(() => {
-    if(!apiData){
-      router.push("/login"); 
-    }
-    const fetchData = async () => {
-      try {
-        const response = await axios.post("http://localhost:5000/api/v1/user/auth/deriv/login", {
-          data: apiData,
-        });
-        console.log("API Response:", response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    // if(!apiData){
+    //   router.push("/login"); 
+    // }
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await axios.post("http://localhost:5000/api/v1/user/auth/deriv/login", {
+    //       data: apiData,
+    //     });
+    //     console.log("API Response:", response.data);
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // };
 
-      fetchData();
+      // fetchData();
 
   }, [router, apiData]);
 
