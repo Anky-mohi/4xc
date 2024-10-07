@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSelector } from 'react-redux';
 import styles from "../styles/Dashboard.module.css";
@@ -15,34 +15,42 @@ import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import Chart from '../components/chart';
 import axios from 'axios'; 
 
-
 function Dashboard() {
   const router = useRouter();
   
   const apiData = useSelector((state) => state.data.apiData);
-  
 
   useEffect(() => {
-    // if(!apiData){
-    //   router.push("/login"); 
-    // }
-    // const fetchData = async () => {
-    //   try {
-    //     const response = await axios.post("http://localhost:5000/api/v1/user/auth/deriv/login", {
-    //       data: apiData,
-    //     });
-    //     console.log("API Response:", response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // };
-
-      // fetchData();
-
+    if (!apiData) {
+      router.push("/login");
+    }
+    
+    const data = {
+      token: "a1-7f19OiIgP0yyIpjecrqCDEt5iX23Y"
+    };
+    
+    const config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'http://localhost:5000/api/v1/user/auth/deriv/login',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: JSON.stringify(data),
+    };
+    
+    axios.request(config)
+    .then((response) => {
+      console.log("Response: ", JSON.stringify(response.data));
+    })
+    .catch((error) => {
+      if (error.response) {
+        console.error("Error Response: ", error.response.data);
+      } else {
+        console.error("Error: ", error.message);
+      }
+    });
   }, [router, apiData]);
-
-
-
 
   return (
     <div className="main">
@@ -55,32 +63,50 @@ function Dashboard() {
             <div className="flex items-center">
               <div className="left_side_bar flex flex-col gap-5">
                 <div className="icon_content">
-                  <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
                     <BusinessCenterIcon style={{ color: "#fff" }} />
                   </button>
                 </div>
                 <div className="icon_content">
-                  <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
                     <AccessTimeFilledIcon style={{ color: "#fff" }} />
                   </button>
                 </div>
                 <div className="icon_content">
-                  <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
                     <HelpCenterIcon style={{ color: "#fff" }} />
                   </button>
                 </div>
                 <div className="icon_content">
-                  <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
                     <LeaderboardIcon style={{ color: "#fff" }} />
                   </button>
                 </div>
                 <div className="icon_content">
-                  <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
                     <LocalFireDepartmentIcon style={{ color: "#fff" }} />
                   </button>
                 </div>
                 <div className="icon_content">
-                  <button type="button" className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
                     <MoreHorizIcon style={{ color: "#fff" }} />
                   </button>
                 </div>
@@ -88,18 +114,24 @@ function Dashboard() {
             </div>
 
             {/* Chart in the middle */}
-            <Chart/>
+            <Chart />
 
             {/* Right Sidebar (Buy/Sell Buttons) */}
             <div className="flex items-center">
               <div className="right_side_bar flex flex-col justify-start" style={{ gap: "20px" }}>
-              <div></div>
-              <div className="text-white flex-column items-center">Profit<br/><span className="text-5xl text-white">50%</span><br/>$50</div>
-                <Button className="py-7 px-6 font-extrabold bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800" variant="contained">
+                <div></div>
+                <div className="text-white flex-column items-center">Profit<br/><span className="text-5xl text-white">50%</span><br/>$50</div>
+                <Button
+                  className="py-7 px-6 font-extrabold bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800"
+                  variant="contained"
+                >
                   <TrendingUpIcon />
                   Higher
                 </Button>
-                <Button className="py-7 px-6 font-extrabold bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800" variant="contained">
+                <Button
+                  className="py-7 px-6 font-extrabold bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800"
+                  variant="contained"
+                >
                   <TrendingDownIcon />
                   Lower
                 </Button>

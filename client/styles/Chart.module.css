@@ -9,3 +9,9 @@
     position: relative; 
     z-index: 1; 
   }
+  .chartSwitchButton{
+    color:#fff;
+    background:red;
+    padding:20px;
+    border-radius:10px;
+  }
