@@ -29,8 +29,8 @@ export default function Verify() {
         setSuccess("Verification successful! Redirecting...");
         // Optionally redirect to dashboard or another page after a timeout
         setTimeout(() => {
-          router.push("https://oauth.deriv.com/oauth2/authorize?app_id=64531");
-        }, 2000);
+          router.push("https://oauth.deriv.com/oauth2/authorize?app_id=64508");
+        }, 2000); 
       } else {
         setError(response.data.message || "Verification failed. Please try again.");
       }
