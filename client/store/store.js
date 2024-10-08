@@ -5,6 +5,8 @@ import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist
 import authReducer from './authSlice';
 import popupReducer from './slices/popupSlice';
 import dataReducer from './slices/dataSlice';
+import dashboardApi from "./slices/dashboardApi";
+
 
 // Redux Persist configuration
 const persistConfig = {
@@ -18,12 +20,12 @@ const store = configureStore({
   reducer: {
     auth: authReducer,
     popup: popupReducer,
-    data: persistedReducer, // Persisted reducer for data
+    data: persistedReducer,
+    dashboardApi: dashboardApi, 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore redux-persist actions that cause non-serializable issues
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
