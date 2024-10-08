@@ -21,6 +21,7 @@ function DashboardHeader() {
     dispatch(showPopup());
   };
   const selectedAssets = useSelector((state) => state.popup.selectedAssets);
+  const apiData = useSelector((state) => state.dashboardApi.apiData);
   const handleRemoveAsset = (asset) => {
     dispatch(removeSelectedAsset(asset));
   };
@@ -98,13 +99,13 @@ function DashboardHeader() {
             </div>
             
           <div className="relative balance text-2xl cursor-pointer text-orange-600 font-bold" onClick={showBalance}>
-            $2,093.00 <ArrowDropDown sx={{ fontSize: 30 }}/>
+            ${apiData.data.balance} <ArrowDropDown sx={{ fontSize: 30 }}/>
             {balance && 
               <>
               <div className="absolute w-[300px] font-normal flex flex-row bg-[#363c4f] text-sm text-white top-9 p-5">
                   <div>
                     <p>Investment....... $0</p>
-                    <p>Available....... $2,093.00</p>
+                    <p>Available....... ${apiData.data.balance}</p>
                   </div>
                   <div className="flex-column">
                     <div className="p-4 bg-blue-400">

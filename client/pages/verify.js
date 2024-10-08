@@ -50,6 +50,7 @@ export default function Verify() {
               <div className="w-5/12 m-auto">
                 <div className={styles.block_content}>
                   <h1 className={styles.heading}>Verify Account</h1>
+                  <h4 className="text-center my-2">Please Check Your Mail You Have Got A Varification Code</h4>
                   {error && <div className="error">{error}</div>}
                   {success && <div className="success">{success}</div>}
                   <Box component="form" fullWidth noValidate autoComplete="off" onSubmit={handleVerify}>
