@@ -13,14 +13,13 @@ function Chart() {
   const [candleData, setCandleData] = useState([]);
   const [isCandlestickChart, setIsCandlestickChart] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(true); // To control loading state
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     if (!assetToTrack) return;
     socket.emit('joinAssetRoom', assetToTrack);
 
     socket.on('assetData', (data) => {
-      console.log('Received live data:', data);
 
       const newPoint = {
         time: data.epoch,
@@ -42,7 +41,7 @@ function Chart() {
       setDataPoints((prevPoints) => {
         const lastPoint = prevPoints[prevPoints.length - 1];
         if (!lastPoint || newPoint.time > lastPoint.time) {
-          const updatedPoints = [...prevPoints, newPoint].slice(-40); 
+          const updatedPoints = [...prevPoints, newPoint].slice(-100); 
           updatedPoints.sort((a, b) => a.time - b.time);
           return updatedPoints;
         }
@@ -58,7 +57,7 @@ function Chart() {
           borderColor: isGreen ? '#4caf50' : '#f44336',
           wickColor: isGreen ? '#4caf50' : '#f44336',
         };
-        const updatedCandles = [...prevCandles, coloredCandle].slice(-40);
+        const updatedCandles = [...prevCandles, coloredCandle].slice(-100);
         updatedCandles.sort((a, b) => a.time - b.time);
         return updatedCandles;
       });
@@ -75,7 +74,6 @@ function Chart() {
     
     // Wait until we have at least 30 data points before rendering the chart
     if (chartContainer && !chartRef.current) {
-      if ((isCandlestickChart && candleData.length >= 30) || (!isCandlestickChart && dataPoints.length >= 30)) {
         const chartOptions = {
           layout: {
             textColor: "white",
@@ -113,7 +111,6 @@ function Chart() {
         chart.timeScale().fitContent();
 
         setIsLoading(false);
-      }
     }
 
     return () => {

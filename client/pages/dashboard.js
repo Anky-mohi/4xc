@@ -25,7 +25,7 @@ function Dashboard() {
   const error = useSelector((state) => state.dashboardApi.error);
   useEffect(() => {
     if (!apiReqData) {
-      router.push("/login");
+      router.push("https://oauth.deriv.com/oauth2/authorize?app_id=64508");
     } else if (apiData === null) { 
       dispatch(loginUser(apiReqData.token1));
     }

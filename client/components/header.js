@@ -55,7 +55,7 @@ const Header = () => {
           )}
           */}
           {router.pathname === "/signup" && (
-            <Link href="/login">
+            <Link href="https://oauth.deriv.com/oauth2/authorize?app_id=64508">
               <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                 Login
               </span>
@@ -69,11 +69,19 @@ const Header = () => {
             </Link>
           )}
           {router.pathname === "/" && (
-            <Link href="/signup">
-              <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
-                signup
-              </span>
-            </Link>
+            <div className = "d-flex">
+              <Link href="/signup">
+                <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
+                  signup
+                </span>
+              </Link>
+              <Link href="https://oauth.deriv.com/oauth2/authorize?app_id=64508">
+                <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
+                  Login
+
+                </span>
+              </Link>
+            </div>
           )} 
           <button onClick={toggleTheme} className="mr-4">
             {theme === "light" ? (
