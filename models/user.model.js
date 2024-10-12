@@ -12,7 +12,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    fullname: String,
+    fullname: {
+      type: String,
+      default: null, // Optional field
+    },
     residence: {
       type: String,
       default: "in",
@@ -21,44 +24,55 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    googleId: String, // for Google users
-    facebookId: String, // for Facebook user
+    googleId: {
+      type: String,
+      default: null, // Optional field
+    },
+    facebookId: {
+      type: String,
+      default: null, // Optional field
+    },
     role: {
       type: String,
       enum: ["trader", "admin"],
       default: "trader",
     },
-    loginid: String,
-    balance: Number,
-    account_type: String,
-    account_category: String,
-    is_virtual: Number,
-    currency: String,
-    country: String,
-    preferred_language: String,
-    user_id: String,
-    // derivAccounts: [
-    //   {
-    //     accountId: String,
-    //     token: String,
-    //     currency: String,
-    //   },
-    // ],
-    // wallet: {
-    //   balance: { type: Number, default: 1000 }, // Default balance of 1000 practice units
-    //   isReloadAllowed: { type: Boolean, default: true }, // Track if reload is allowed (e.g. once a day)
-    //   lastReloadTime: { type: Date }, // Track the last reload time
-    // },
-    // kycStatus: {
-    //   isVerified: { type: Boolean, default: false }, // KYC verification status
-    //   documents: {
-    //     idProof: String,
-    //     addressProof: String,
-    //   },
-    // },
-    // documents: [{
-    //   type: String, // URLs of uploaded documents
-    // }],
+    loginid: {
+      type: String,
+      default: null, // Optional field
+    },
+    balance: {
+      type: Number,
+      default: 0, // Default balance to 0
+    },
+    account_type: {
+      type: String,
+      default: null, // Optional field
+    },
+    account_category: {
+      type: String,
+      default: null, // Optional field
+    },
+    is_virtual: {
+      type: Number,
+      default: 0, // Default to non-virtual accounts
+    },
+    currency: {
+      type: String,
+      default: null, // Optional field
+    },
+    country: {
+      type: String,
+      default: null, // Optional field
+    },
+    preferred_language: {
+      type: String,
+      default: "en", // Default to English
+    },
+    user_id: {
+      type: String,
+      default: null, // Optional field
+    },
     isBlacklisted: {
       type: Boolean,
       default: false,
@@ -67,12 +81,24 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Hashing password before saving
+// Pre-save hook for hashing the password before saving
 userSchema.pre("save", async function (next) {
+  // Only hash the password if it has been modified (or is new)
   if (!this.isModified("password")) return next();
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    return next(error);
+  }
 });
+
+// Add a method to compare passwords
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

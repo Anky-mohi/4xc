@@ -11,6 +11,8 @@ const {
 const {
   fetchAndStoreBalance,
 } = require("../controller/user/wallet.controller");
+const { getTickHistory } = require("../controller/user/tick.controller");
+const { getDerivResponse } = require("../controller/user/deriv.controller");
 
 // routes list
 
@@ -24,11 +26,11 @@ router.post(
   // celebrate({ body: userValidation.register }),
   authController.verifyOtp
 );
-router.post(
-  "/auth/login",
-  celebrate({ body: userValidation.login }),
-  authController.login
-);
+// router.post(
+//   "/auth/login",
+//   celebrate({ body: userValidation.login }),
+//   authController.login
+// );
 router.post("/auth/deriv/login", authController.loginWithDerivToken);
 // Trading route
 // router.post('/trade/start', startTrade);
@@ -36,6 +38,8 @@ router.post("/auth/deriv/login", authController.loginWithDerivToken);
 // assests routes
 router.get("/assests", getListOfAssets);
 router.get("/assests/price/:symbol", getPrice);
+router.post("/derivResponse", getDerivResponse);
 router.get("/wallet/balance", fetchAndStoreBalance);
+router.post("/tick/history", getTickHistory);
 
 module.exports = router;

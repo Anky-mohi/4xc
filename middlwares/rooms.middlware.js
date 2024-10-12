@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
+const { DERIV_API_URL } = require('../config/constants');
 
-const DERIV_API_URL = 'wss://ws.binaryws.com/websockets/v3?app_id=64213'; // Replace with your Deriv app ID
+// const DERIV_API_URL = 'wss://ws.binaryws.com/websockets/v3?app_id=64213'; // Replace with your Deriv app ID
 
 // Store active WebSocket connections for each asset room
 const assetConnections = {};

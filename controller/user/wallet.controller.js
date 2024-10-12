@@ -1,89 +1,67 @@
 const Wallet = require("../../models/wallet.model");
-const derivSocket = require("../../config/derivSocket");
-// Function to authorize and fetch balance for a specific user
-// Function to authorize and fetch balance for a specific user
+const { getDerivSocket } = require("../../config/derivSocket");
+
+// Function to authorize a user and fetch their balance
 const authorizeAndFetchBalance = (userToken) => {
   return new Promise((resolve, reject) => {
-    // Authorize the user
-    derivSocket.send(
-      JSON.stringify({
-        authorize: userToken,
-      })
-    );
+    const derivSocket = getDerivSocket();
 
-    // Listen for the authorization message
-    const authListener = (data) => {
+    // Authorize the user
+    derivSocket.send(JSON.stringify({ authorize: userToken }));
+
+    // Handle the WebSocket response
+    const handleMessage = (data) => {
       const response = JSON.parse(data);
 
       if (response.error) {
-        derivSocket.removeListener("message", authListener); // Remove listener after use
+        derivSocket.off("message", handleMessage); // Clean up listener
         return reject(response.error.message);
       }
 
-      // Fetch the balance once authorized
-      derivSocket.send(
-        JSON.stringify({
-          balance: 1,
-        })
-      );
-
-      // Listen for the balance message
-      const balanceListener = (balanceData) => {
-        const balanceResponse = JSON.parse(balanceData);
-        if (balanceResponse.msg_type === "balance") {
-          derivSocket.removeListener("message", balanceListener); // Remove listener after use
-          // console.log(balanceResponse, "kkkkkkkkkkkkkkkkk");
-          return resolve(balanceResponse.balance);
-        } else if (balanceResponse.error) {
-          derivSocket.removeListener("message", balanceListener); // Remove listener after use
-          return reject(balanceResponse.error.message);
-        }
-      };
-
-      // Add the balance listener
-      derivSocket.on("message", balanceListener);
+      if (response.msg_type === "authorize") {
+        // If authorized, request the balance
+        derivSocket.send(JSON.stringify({ balance: 1 }));
+      } else if (response.msg_type === "balance") {
+        // Return balance data
+        derivSocket.off("message", handleMessage); // Clean up listener
+        return resolve(response.balance);
+      }
     };
 
-    // Add the authorization listener
-    derivSocket.on("message", authListener);
+    derivSocket.on("message", handleMessage);
   });
 };
 
 // API to fetch and store both real and practice balances
 exports.fetchAndStoreBalance = async (req, res) => {
-  let { userToken } = req.body; // The Deriv token provided by the user
-  userToken = "zsxrK8ulZlOJCWi";
+  const userToken = req.body.userToken || "zsxrK8ulZlOJCWi"; // Deriv token
   try {
     // Fetch real balance
     const realBalance = await authorizeAndFetchBalance(userToken);
-    console.log(realBalance, "eeeee");
-    // return;
 
-    // Check if the wallet exists for the user
+    // Check if the wallet exists for the user, otherwise create a new one
     let wallet = await Wallet.findOne({ userId: req.user._id });
     if (!wallet) {
-      // Create a new wallet if it doesn't exist
       wallet = new Wallet({
         userId: req.user._id,
         realBalance,
-        practiceBalance,
+        practiceBalance: 0, // Initialize with 0 if not available yet
       });
     } else {
-      // Update existing wallet with new balances
+      // Update existing wallet balances
       wallet.realBalance = realBalance;
-      wallet.practiceBalance = practiceBalance;
     }
 
-    // Save wallet to the database
+    // Save updated wallet to the database
     await wallet.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Balances fetched and stored successfully",
       wallet,
     });
   } catch (error) {
     console.error("Error fetching or storing balance:", error);
-    res.status(500).json({
+    return res.status(500).json({
       message: "Failed to fetch or store balances",
       error: error.message,
     });
