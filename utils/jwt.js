@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
-const { config } = require("../config/config");
+const { JWT_SECRET_KEY } = require("../config/constants");
 
 exports.generateToken = (data, time) => {
-  let secretKey = config.JWT_PRIVATE_KEY;
+  let secretKey = JWT_SECRET_KEY;
   try {
     let token;
     if (time) {
@@ -52,7 +52,7 @@ exports.checkToken = (token) => {
 
 exports.verifyToken = async (request) => {
   let token = "";
-  let secretKey = config.JWT_PRIVATE_KEY;
+  let secretKey = JWT_SECRET_KEY;
   token = request.headers["x-auth-token"];
   if (token) {
     try {

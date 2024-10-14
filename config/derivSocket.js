@@ -1,15 +1,16 @@
 const WebSocket = require("ws");
-const { DERIV_API_URL, DERIV_API_TOKEN } = require("../config/constants");
+const { DERIV_API_URL } = require("../config/constants");
 
 let derivSocket;
 let isConnected = false;
 
 // Create the Deriv WebSocket connection
-const createDerivSocket = () => {
+const createDerivSocket = (authSocket) => {
     derivSocket = new WebSocket(DERIV_API_URL);
 
     derivSocket.on("open", () => {
         isConnected = true;
+        derivSocket.send(JSON.stringify(authSocket));
         console.log("Connected to Deriv WebSocket");
     });
 
@@ -28,10 +29,10 @@ const createDerivSocket = () => {
 };
 
 // Get the WebSocket connection
-const getDerivSocket = () => {
+const getDerivSocket = (authSocket) => {
     if (!derivSocket || !isConnected) {
         console.log("Reconnecting to Deriv WebSocket...");
-        createDerivSocket();
+        createDerivSocket(authSocket);
     }
     return derivSocket;
 };

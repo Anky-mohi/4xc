@@ -1,6 +1,5 @@
 const jwt = require("../../utils/jwt");
 const User = require("../../models/user.model");
-const bcrypt = require("bcrypt");
 const { getDerivSocket } = require("../../config/derivSocket");
 
 // Helper function to handle WebSocket operations
@@ -135,19 +134,18 @@ const authorize = async (token, res) => {
       if (response.error) {
         return res.status(500).json({ message: response.error.message, status: 0 });
       }
-
       const userData = {
         loginid: response.authorize.loginid,
         balance: response.authorize.balance,
         email: response.authorize.email,
         fullname: response.authorize.fullname,
-        account_type: response.authorize.account_list[0].account_type,
-        account_category: response.authorize.account_list[0].account_category,
         is_virtual: response.authorize.is_virtual,
         currency: response.authorize.currency,
         country: response.authorize.country,
         preferred_language: response.authorize.preferred_language,
         user_id: response.authorize.user_id,
+        account_list: response.authorize.account_list,
+        deriv_token: token
       };
 
       try {
@@ -156,7 +154,13 @@ const authorize = async (token, res) => {
           userData,
           { new: true, upsert: true, useFindAndModify: false }
         );
-        return res.json({ data: updatedUser, message: "Virtual account login successful!", status: 1 });
+        // const dataToDecode = {
+        //   email: response.authorize.email,
+        //   deriv_token: token,
+        // }
+        // const token = jwt.generateToken(dataToDecode, "24h");
+
+        return res.json({ data: updatedUser, token, message: "Virtual account login successful!", status: 1 });
       } catch (err) {
         console.error("Database Update Error: ", err);
         return res.status(500).json({ message: "Database update error", status: 0 });

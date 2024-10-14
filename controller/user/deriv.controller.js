@@ -1,38 +1,30 @@
+const { WebSocket } = require("ws");
 const { getDerivSocket } = require("../../config/derivSocket");
+const  DerivSocket  = require("../../services/derivSocket");
+const { DERIV_API_URL } = require("../../config/constants");
 
+const getDerivResponse = async (req, res) => {
+  const { derivtoken } = req.headers;
+  const derivSocket = new DerivSocket(derivtoken);
+  try {
+    await derivSocket.connect();
+    derivSocket.sendMessage(req.body);
 
-const getDerivResponse = (req, res) => {
-  const derivSocket = getDerivSocket();
-  const obj = req.body;
+    const response = await derivSocket.onMessage();
 
-  let responseSent = false; // Flag to track if response is sent
-
-  derivSocket.on("open", () => {
-    derivSocket.send(JSON.stringify(obj));
-  });
-
-  derivSocket.on("message", (data) => {
-    const response = JSON.parse(data);
-    if (!responseSent) {
-      responseSent = true; // Mark response as sent
-      derivSocket.close(); // Close the WebSocket after the response is sent
-      return res.status(200).send(response);
-    }
-  });
-
-  derivSocket.on("error", (error) => {
+    console.log("Response received:", response); // Log the response for debugging
+    return res.status(200).send(response);
+  } catch (error) {
     console.error("WebSocket error:", error);
-    if (!responseSent) {
-      responseSent = true; // Mark response as sent
-      derivSocket.close(); // Ensure WebSocket is closed on error
-      return res.status(400).send({ error: "WebSocket error: " + error.message });
+    return res.status(400).send({ error: "WebSocket error: " + error.message });
+  } finally {
+    if (derivSocket.socket && derivSocket.socket.readyState === WebSocket.OPEN) {
+      derivSocket.close(); // Close only if the socket is open
     }
-  });
-
-  derivSocket.on("close", () => {
     console.log("WebSocket connection closed.");
-  });
+  }
 };
+
 
 const getResponseFromDeriv = (request) => {
   return new Promise((resolve, reject) => {
@@ -59,7 +51,24 @@ const getResponseFromDeriv = (request) => {
   });
 };
 
+const verifyUserAuthorizeToken = async (req, res) => {
+  try {
+    const derivSocket = new WebSocket(DERIV_API_URL);
+    derivSocket.on("open", () => {
+      derivSocket.send(JSON.stringify({ authorize: req.body.authorize }))
+    });
+
+    derivSocket.on("message", (data) => {
+      const response = JSON.parse(data);
+      return res.status(200).send(response)
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Internal Server Error' })
+  }
+}
+
 module.exports = {
   getDerivResponse,
   getResponseFromDeriv,
+  verifyUserAuthorizeToken
 };

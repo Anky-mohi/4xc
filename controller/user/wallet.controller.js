@@ -1,5 +1,7 @@
 const Wallet = require("../../models/wallet.model");
 const { getDerivSocket } = require("../../config/derivSocket");
+const DerivSocket = require("../../services/derivSocket");
+const { WebSocket } = require("ws");
 
 // Function to authorize a user and fetch their balance
 const authorizeAndFetchBalance = (userToken) => {
@@ -67,3 +69,41 @@ exports.fetchAndStoreBalance = async (req, res) => {
     });
   }
 };
+
+exports.getUserWalletBalance = async (req,res) => {
+  const { derivtoken } = req.headers;
+  const derivSocket = new DerivSocket(derivtoken);
+  try {
+    await derivSocket.connect();
+    derivSocket.sendMessage(req.body);
+
+    const response = await derivSocket.onMessage();
+
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(400).send({ error: "WebSocket error: " + error.message });
+  } finally {
+    if (derivSocket.socket && derivSocket.socket.readyState === WebSocket.OPEN) {
+      derivSocket.close();
+    }
+  }
+}
+
+exports.topUpPracticeWallet = async (req,res) => {
+  const { derivtoken } = req.headers;
+  const derivSocket = new DerivSocket(derivtoken);
+  try {
+    await derivSocket.connect();
+    derivSocket.sendMessage(req.body);
+
+    const response = await derivSocket.onMessage();
+
+    return res.status(200).send(response);
+  } catch (error) {
+    return res.status(400).send({ error: "WebSocket error: " + error.message });
+  } finally {
+    if (derivSocket.socket && derivSocket.socket.readyState === WebSocket.OPEN) {
+      derivSocket.close();
+    }
+  }
+}
