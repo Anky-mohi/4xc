@@ -15,7 +15,7 @@ export default function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/user/auth/register", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/v1/user/auth/register`, {
         email,
         password,
       });
@@ -55,11 +55,11 @@ export default function Signup() {
 
 
   const handleGoogleLogin = () => {
-    window.open('http://localhost:5000/api/auth/google', '_self');
+    window.open(`${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/auth/google`, '_self');
   };
 
   const handleFacebookLogin = () => {
-    window.open('http://localhost:5000/api/auth/facebook', '_self');
+    window.open(`${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/auth/facebook`, '_self');
   };
 
   return (

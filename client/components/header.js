@@ -55,7 +55,7 @@ const Header = () => {
           )}
           */}
           {router.pathname === "/signup" && (
-            <Link href="https://oauth.deriv.com/oauth2/authorize?app_id=64508">
+            <Link href={`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.APP_ID}`}>
               <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                 Login
               </span>
@@ -75,7 +75,7 @@ const Header = () => {
                   signup
                 </span>
               </Link>
-              <Link href="https://oauth.deriv.com/oauth2/authorize?app_id=64508">
+              <Link href={`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.APP_ID}`}>
                 <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                   Login
 

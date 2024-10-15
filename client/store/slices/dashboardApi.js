@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // Async thunk for login
 export const loginUser = createAsyncThunk('dashboard/loginUser', async (token) => {
-  const response = await axios.post('http://localhost:5000/api/v1/user/auth/deriv/login', {
+  const response = await axios.post(`${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/v1/user/auth/deriv/login`, {
     token,
   });
   return response.data;

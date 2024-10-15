@@ -45,10 +45,10 @@ export default function Login() {
     }
   };
   const handleGoogleLogin = () => {
-    window.open('https://oauth.deriv.com/oauth2/authorize?app_id=64299', '_self');
+    window.open(`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.APP_ID}`, '_self');
   };
   const handleFacebookLogin = () => {
-    window.open('http://localhost:5000/api/auth/facebook', '_self');
+    window.open(`${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/auth/facebook`, '_self');
   };
   return (
     <div className="main">

@@ -25,7 +25,7 @@ function Dashboard() {
   const error = useSelector((state) => state.dashboardApi.error);
   useEffect(() => {
     if (!apiReqData) {
-      router.push("https://oauth.deriv.com/oauth2/authorize?app_id=64508");
+      router.push(`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.APP_ID}`);
     } else if (apiData === null) { 
       dispatch(loginUser(apiReqData.token1));
     }
@@ -45,7 +45,7 @@ function Dashboard() {
   return (
     <div className="main">
       <div className={`section-dashboard ${styles.section}`}>
-        <DashboardHeader apiData={apiData} />
+        <DashboardHeader/>
         <div className="overlay"></div>
         <div className={styles.sizer}>
           <div className={`flex justify-between ${styles.container}`}>
@@ -79,7 +79,7 @@ function Dashboard() {
                   $50
                 </div>
                 <Button
-                  className="py-7 px-6 font-extrabold bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800"
+                  className=" font-extrabold bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 py-7 px-6"
                   variant="contained"
                 >
                   <TrendingUpIcon />

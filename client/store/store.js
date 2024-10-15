@@ -6,6 +6,7 @@ import authReducer from './authSlice';
 import popupReducer from './slices/popupSlice';
 import dataReducer from './slices/dataSlice';
 import dashboardApi from "./slices/dashboardApi";
+import getBalance from "./slices/walletSlice.js";
 
 
 // Redux Persist configuration
@@ -21,7 +22,8 @@ const store = configureStore({
     auth: authReducer,
     popup: popupReducer,
     data: persistedReducer,
-    dashboardApi: dashboardApi, 
+    dashboardApi: dashboardApi,
+    getBalance: getBalance,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
