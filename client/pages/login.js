@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
-import { login } from "../store/authSlice"; 
+import { login } from "../store/authSlice";
 import styles from "../styles/Login.module.css";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -18,7 +18,6 @@ export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
 
- 
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -28,7 +27,7 @@ export default function Login() {
         dispatch(login({ email }));
         router.push("/dashboard");
       } else {
-        alert("Invalid email or password"); 
+        alert("Invalid email or password");
         const response = await axios.post("/api/login", {
           email,
           password,
@@ -45,10 +44,16 @@ export default function Login() {
     }
   };
   const handleGoogleLogin = () => {
-    window.open(`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.APP_ID}`, '_self');
+    window.open(
+      `https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.NEXT_PUBLIC_APP_ID}`,
+      "_self"
+    );
   };
   const handleFacebookLogin = () => {
-    window.open(`${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/auth/facebook`, '_self');
+    window.open(
+      `${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/auth/facebook`,
+      "_self"
+    );
   };
   return (
     <div className="main">
@@ -154,7 +159,10 @@ export default function Login() {
                     <span>OR</span>
                   </div>
                   <div className="facebook w-full py-2">
-                    <button onClick = {handleFacebookLogin}  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center w-full justify-center">
+                    <button
+                      onClick={handleFacebookLogin}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-flex items-center w-full justify-center"
+                    >
                       <svg
                         className="w-6 h-6 mr-2 fill-current"
                         xmlns="http://www.w3.org/2000/svg"
@@ -167,7 +175,10 @@ export default function Login() {
                   </div>
 
                   <div className="google w-full py-2">
-                    <button onClick = {handleGoogleLogin} className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded inline-flex items-center shadow-md w-full justify-center">
+                    <button
+                      onClick={handleGoogleLogin}
+                      className="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded inline-flex items-center shadow-md w-full justify-center"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-6 h-6 mr-2 fill-current"

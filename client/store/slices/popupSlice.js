@@ -3,7 +3,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const fetchPopupData = createAsyncThunk(
   "popup/fetchPopupData",
   async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/v1/user/assests`);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/v1/user/assests`
+    );
     const data = await response.json();
     return data.data;
   }
@@ -17,7 +19,7 @@ const popupSlice = createSlice({
     error: null,
     searchTerm: "",
     tabValue: "popular",
-    selectedAssets: ["BOOM300N"],
+    selectedAssets: ["R_50"],
   },
   reducers: {
     showPopup: (state) => {

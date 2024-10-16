@@ -63,7 +63,7 @@
   .time_scale_pop{
     position:absolute;
     bottom: 100%;
-    width: 175px;
+    width: 250px;
     left:0;
     padding:10px 0px;
   }
@@ -74,7 +74,9 @@
     border: 1px solid #fff;
     display: flex;
     flex-wrap: wrap;
+    gap:2px;
   }
+  
   @keyframes spin {
     0% {
       transform: rotate(0deg);

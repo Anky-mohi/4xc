@@ -48,12 +48,12 @@ h6{
     font-size:20px;
 }
 .px-6{
-padding-left: 1.5rem  !important;
-padding-right:1.5rem !important;
+padding-left: 1rem  !important;
+padding-right:1rem !important;
 }
-.py-7 {
-    padding-top: 1.7rem  !important;
-    padding-bottom:1.7rem !important;
+.py-6 {
+    padding-top: 1rem  !important;
+    padding-bottom:1rem !important;
 }
 .MuiButton-sizeMedium{
     font-weight: 800 !important;

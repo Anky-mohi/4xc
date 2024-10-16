@@ -1,16 +1,16 @@
 // components/Header.js
 
-import { useEffect, useState , useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter  } from "next/router";
+import { useRouter } from "next/router";
 
 const Header = () => {
   const [theme, setTheme] = useState("light");
   const IframUrl = useRef(null);
   const router = useRouter();
   const [showIframe, setShowIframe] = useState(false);
- 
+
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
@@ -19,7 +19,7 @@ const Header = () => {
   useEffect(() => {
     if (IframUrl.current) {
       const iframeSrc = IframUrl.current.src;
-      console.log('Iframe URL:', iframeSrc);  // You can store or use this URL as needed
+      console.log("Iframe URL:", iframeSrc); // You can store or use this URL as needed
     }
   }, []);
   const toggleTheme = () => {
@@ -28,7 +28,6 @@ const Header = () => {
     localStorage.setItem("theme", newTheme);
     document.body.setAttribute("data-theme", newTheme);
   };
-   
 
   return (
     <header className="bg-transparent fixed w-full text-white p-4">
@@ -45,8 +44,7 @@ const Header = () => {
           </Link>
         </div>
         <div className="flex items-center">
-        
-        {/* {router.pathname === "/login" && (
+          {/* {router.pathname === "/login" && (
             <Link href="/signup">
               <span className="px-4 mr-2.5	 py-2 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                 Sign Up
@@ -55,12 +53,14 @@ const Header = () => {
           )}
           */}
           {router.pathname === "/signup" && (
-            <Link href={`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.APP_ID}`}>
+            <Link
+              href={`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.NEXT_PUBLIC_APP_ID}`}
+            >
               <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                 Login
               </span>
             </Link>
-          )} 
+          )}
           {router.pathname === "/thankyou" && (
             <Link href="/dashboard">
               <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
@@ -69,20 +69,21 @@ const Header = () => {
             </Link>
           )}
           {router.pathname === "/" && (
-            <div className = "d-flex">
+            <div className="d-flex">
               <Link href="/signup">
                 <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                   signup
                 </span>
               </Link>
-              <Link href={`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.APP_ID}`}>
+              <Link
+                href={`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.NEXT_PUBLIC_APP_ID}`}
+              >
                 <span className="px-4 py-2 mr-2.5	 cursor-pointer font-semibold text-sm rounded-lg bg-orange-500 hover:bg-orange-600">
                   Login
-
                 </span>
               </Link>
             </div>
-          )} 
+          )}
           <button onClick={toggleTheme} className="mr-4">
             {theme === "light" ? (
               <svg
@@ -144,7 +145,6 @@ const Header = () => {
           </button>
         </div>
       </nav>
-      
     </header>
   );
 };
