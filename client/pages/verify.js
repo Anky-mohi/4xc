@@ -15,7 +15,7 @@ export default function Verify() {
   const handleVerify = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/user/auth/verifyOtp", {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_DB_BASE_URL}/api/v1/user/auth/verifyOtp`, {
         code,
         username,
       },
@@ -29,7 +29,7 @@ export default function Verify() {
         setSuccess("Verification successful! Redirecting...");
         // Optionally redirect to dashboard or another page after a timeout
         setTimeout(() => {
-          router.push("https://oauth.deriv.com/oauth2/authorize?app_id=64508");
+          router.push(`https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.NEXT_PUBLIC_APP_ID}`);
         }, 2000); 
       } else {
         setError(response.data.message || "Verification failed. Please try again.");

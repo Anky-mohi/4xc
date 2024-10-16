@@ -50,6 +50,9 @@ body[data-theme="light"] .section {
     flex-direction: column;
     justify-content: space-between;
   }
+  .text-white{
+    color: #fff !important;
+  }
   
   .block_content {
     text-align: center;
@@ -81,6 +84,7 @@ body[data-theme="light"] .section {
   }
   .container {
     margin: 0 auto;
+    padding-right: 20px;
   }
   .row {
     max-width: 100%;

@@ -8,6 +8,7 @@
     height: 500px; 
     position: relative; 
     z-index: 1; 
+    transition: all 0.5s ease-in-out;
   }
   .chartSwitchButton{
     color:#fff;
@@ -36,6 +37,44 @@
     border: 5px solid rgba(255, 255, 255, 0.3);
     border-top-color: white;
     animation: spin 1s linear infinite;
+  }
+  .icon{
+    border: 1px solid #ffffff;
+    width: min-content;
+    padding: 5px;
+    border-radius: 8px;
+    background-color: #000000;
+    cursor: pointer;
+    position: relative;
+  }
+  .icon:focus{
+    scale:1.1;
+  }
+  .iconsgroup{
+    bottom:7%;
+    position: absolute;
+    z-index: 22;
+    left:5%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .time_scale_pop{
+    position:absolute;
+    bottom: 100%;
+    width: 250px;
+    left:0;
+    padding:10px 0px;
+  }
+  .row_time{
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #000000;
+    border: 1px solid #fff;
+    display: flex;
+    flex-wrap: wrap;
+    gap:2px;
   }
   
   @keyframes spin {

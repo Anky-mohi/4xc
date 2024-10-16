@@ -130,13 +130,13 @@ function Popup() {
               <TabList
                 onChange={(event, newValue) => dispatch(setTabValue(newValue))}
               >
-                <Tab  className = "text-white" label="Popular" value="popular" />
-                <Tab  className = "text-white" label="Commodities" value="commodities" />
-                <Tab className = "text-white" label="Crypto Currency" value="cryptocurrency" />
-                <Tab className = "text-white" label="Forex" value="forex" />
-                <Tab className = "text-white" label="Indices" value="indices" />
-                <Tab className = "text-white" label="Synthetic Index" value="synthetic_index" />
-                <Tab className = "text-white" label="Watch List" value="watch_list" />
+                <Tab  className = "text-white" sx={{ color: "#fff" }} label="Popular" value="popular" />
+                <Tab  className = "text-white" sx={{ color: "#fff" }} label="Commodities" value="commodities" />
+                <Tab className = "text-white" sx={{ color: "#fff" }} label="Crypto Currency" value="cryptocurrency" />
+                <Tab className = "text-white" sx={{ color: "#fff" }} label="Forex" value="forex" />
+                <Tab className = "text-white" sx={{ color: "#fff" }} label="Indices" value="indices" />
+                <Tab className = "text-white" sx={{ color: "#fff" }} label="Synthetic Index" value="synthetic_index" />
+                <Tab className = "text-white" sx={{ color: "#fff" }} label="Watch List" value="watch_list" />
               </TabList>
             </Box>
             <TabPanel value={tabValue}>
