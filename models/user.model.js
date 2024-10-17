@@ -104,7 +104,8 @@ const userSchema = new mongoose.Schema(
     },
     currency: {
       type: String,
-      required: true,
+      required: false,
+      default: 'USD',
     },
     country: {
       type: String,
@@ -116,8 +117,8 @@ const userSchema = new mongoose.Schema(
     },
     user_id: {
       type: Number, // Assuming user_id is a numeric identifier
-      required: true,
-      unique: true,
+      required: false,
+      unique: false,
     },
     deriv_token: {
       type: String,
