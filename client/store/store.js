@@ -7,6 +7,7 @@ import popupReducer from './slices/popupSlice';
 import dataReducer from './slices/dataSlice';
 import dashboardApi from "./slices/dashboardApi";
 import getBalance from "./slices/walletSlice.js";
+import chartReducer from './slices/chartApi';
 
 
 // Redux Persist configuration
@@ -24,6 +25,7 @@ const store = configureStore({
     data: persistedReducer,
     dashboardApi: dashboardApi,
     getBalance: getBalance,
+    chart: chartReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
