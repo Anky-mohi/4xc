@@ -121,35 +121,30 @@ function Dashboard() {
   };
 
   const handleAccessTimeClick = () => {
-    if (!showTransactionLog) {
-      // Emit the transaction history request when opening the popup
-      socket.emit('transcationHistoryRequest', {
-        profit_table: 1,
-        description: 1,
-        limit: 25, // Adjust the limit or add pagination later
-        offset: 0,
-        sort: "ASC",
-        loginid: apiReqData.acct1,
-        token: apiReqData.token1,
-      });
+    // Emit the transaction history request when clicking the button
+    console.log("alsdkfjlskf")
+    socket.emit('transcationHistoryRequest', {
+      profit_table: 1,
+      description: 1,
+      limit: 25, // Adjust the limit or add pagination later
+      offset: 0,
+      sort: "ASC",
+      loginid: apiReqData.acct1,
+      token: apiReqData.token1,
+    });
   
-      // Listen for the transaction history response
-      socket.once('transcationHistory', (data) => {
-        console.log('Transaction history details:', data);
-        setTransactionLog(data); // Update transaction log state with received data
-        setShowTransactionLog(true); // Open the transaction log popup
-      });
-    } else {
-      // Toggle the popup visibility off
-      setShowTransactionLog(false);
-    }
+    // Listen for the transaction history response
+    socket.once('transcationHistory', (data) => {
+      console.log('Transaction history details:', data);
+      setTransactionLog(data); // Update transaction log state with received data
+      setShowTransactionLog(true); // Open the transaction log popup
+    });
   
     // Clean up the socket listener when the component unmounts or re-renders
     return () => {
       socket.off('transcationHistory');
     };
   };
-  
   
 
   const handleHelpCenterClick = () => {
@@ -211,7 +206,18 @@ function Dashboard() {
                   <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-white font-bold px-2">${amount}</span>
+                <span>
+                <span className="text-[#fff] font-semibold mr-2 text-lg">$</span>
+                <input
+                    type="text"
+                    name="minutes"
+                    value={amount}
+                    onChange={(e) => {
+                    setAmount(e.target.value)}}
+                    className="focus:outline-none"
+                    style={{ maxWidth:"60px",background: "#31425a",color: "rgb(255, 255, 255)",padding: "5px 10px",borderRadius: "6px"}}
+                  />
+                  </span>
                   <div className="flex gap-2">
                     <Button onClick={handleDecrease}>
                       <Remove style={{ color: "#fff" }} />
@@ -228,10 +234,29 @@ function Dashboard() {
                   <span className="text-sm text-gray-400 px-2">Time</span>
                   <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-white font-bold px-2">
+                <div className="flex items-center justify-between text-[#fff]">
+                <input
+                    type="text"
+                    name="minutes"
+                    value={formatTime(minutes)}
+                    className="focus:outline-none"
+                    onChange={(e) => {
+                    setMinutes(e.target.value)}}
+                    style={{ maxWidth:"60px",background: "#31425a",color: "rgb(255, 255, 255)",padding: "5px 10px",borderRadius: "6px"}}
+                  />
+                  :
+                  <input
+                    type="text"
+                    name="seconds"
+                    value={formatTime(seconds)}
+                    className="focus:outline-none"
+                    onChange={(e) => {
+                      setSeconds(e.target.value)}}
+                    style={{ maxWidth:"60px",background: "#31425a",color: "rgb(255, 255, 255)",padding: "5px 10px",borderRadius: "6px"}}
+                  />
+                  {/* <span className="text-white font-bold px-2">
                     {formatTime(minutes)}:{formatTime(seconds)}
-                  </span>
+                  </span> */}
                   <div className="flex gap-2">
                     <Button onClick={handleDecreaseTime}>
                       <Remove style={{ color: "#fff" }} />
@@ -246,18 +271,18 @@ function Dashboard() {
               <div className="bg-gray-800 rounded-md border border-gray-600 p-2">
                 <div className="flex gap-2 justify-center">
                   <Button
-                    className="font-extrabold bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 py-6 px-6 flex-col"
+                    className="buy-sell-btn"
                     style={{ color: "#fff" }}
                     onClick={handleClickHigher}
                   >
-                    <TrendingUpIcon /> Buy (Higher)
+                    <TrendingUpIcon />Higher
                   </Button>
                   <Button
-                    className="py-6 px-6 font-extrabold bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 flex-col"
+                    className="buy-sell-btn"
                     style={{ color: "#fff" }}
                     onClick={handleClickLower}
                   >
-                    <TrendingDownIcon /> Buy (Lower)
+                    <TrendingDownIcon /> Lower
                   </Button>
                 </div>
               </div>

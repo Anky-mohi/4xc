@@ -21,15 +21,17 @@ import {
   fetchVRTBalance,
   refreshToptup,
 } from "../store/slices/walletSlice";
+import io from 'socket.io-client';
+const socket = io("http://localhost:5000/");
 
 function DashboardHeader() {
   const dispatch = useDispatch();
 
   const [userMenu, setUserMenu] = useState(false);
   const [balance, setBalance] = useState(false);
-  const virtualBalance = useSelector(
-    (state) => state.getBalance.virtualBalance || 0
-  );
+    const [balanceHead, setBalanceHead] = useState(0);
+  const [error, setError] = useState(null);
+ 
   const realBalance = useSelector((state) => state.getBalance.realBalance || 0);
   const selectedAssets = useSelector((state) => state.popup.selectedAssets);
   const apiData = useSelector((state) => state.dashboardApi.apiData);
@@ -37,6 +39,22 @@ function DashboardHeader() {
   const realAccount = accountList.find((acc) => !acc.is_virtual);
   const virtualAccount = accountList.find((acc) => acc.is_virtual);
   const apiReqData = useSelector((state) => state.data.apiData);
+
+
+  useEffect(() => {
+    if (virtualAccount && virtualAccount.loginid) {
+      socket.emit('fetchBalance', apiData);
+      socket.on('walletUpdate', (wallet) => {
+        setBalanceHead(wallet.balance.balance);
+      });
+  
+      return () => {
+        socket.off('walletUpdate');
+      }
+    }
+  }, [virtualAccount,apiData]);
+
+
 
   useEffect(() => {
     if (realAccount && realAccount.loginid) {
@@ -157,19 +175,10 @@ function DashboardHeader() {
             className="relative balance text-2xl cursor-pointer text-orange-600 font-bold"
             onClick={showBalance}
           >
-            ${apiData.data.balance} <ArrowDropDown sx={{ fontSize: 30 }} />
+            ${balanceHead} <ArrowDropDown sx={{ fontSize: 30 }} />
             {balance && (
               <>
-                <div className="absolute w-[600px] right-[-100%] font-normal flex flex-row items-start gap-1 text-sm text-white top-[50px]">
-                  <div className="w-3/6 bg-[#555555] flex flex-col items-start p-5">
-                    <div className="pb-3">
-                      <p>Investment....... $0</p>
-                      <p>Available....... ${apiData.data.balance}</p>
-                    </div>
-                    <div className="flex-column pt-3">
-                      <div className="p-4 bg-blue-400">How are you</div>
-                    </div>
-                  </div>
+                <div className="absolute w-[600px] left-[0%] font-normal flex flex-row items-start gap-1 text-sm text-white top-[50px]">
                   <div className="w-3/6 w-3/6 bg-[#000]">
                     <div className="real-acc-content p-[10px] flex flex-row justify-between">
                       <div className="left">
@@ -196,8 +205,7 @@ function DashboardHeader() {
                           Practice Account
                         </div>
                         <div className="price text-[#e8570c] font-bold">
-                          ${virtualBalance}{" "}
-                          {/*  I wan to set here Vertual balance if there is exist any Vertual account login id  */}
+                          ${balanceHead}
                         </div>
                       </div>
                       <div className="right-content">
