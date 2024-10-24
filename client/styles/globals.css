@@ -61,3 +61,6 @@ padding-right:1rem !important;
 .deposit_icon{
    transform: rotateY(180deg);
 }
+.buy-sell-btn.active{
+    background: #31425a;
+}

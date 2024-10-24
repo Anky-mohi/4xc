@@ -114,8 +114,9 @@ function Chart() {
                 seriesRef.current.setData(updatedCandleData); // Set updated candle data
             }
         });
-
+          
         return () => {
+            socket.off('proposal');
             socket.emit("leaveAssetRoom", assetToTrack);
             socket.off("assetData");
         };

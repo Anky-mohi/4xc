@@ -45,7 +45,7 @@ function DashboardHeader() {
     if (virtualAccount && virtualAccount.loginid) {
       socket.emit('fetchBalance', apiData);
       socket.on('walletUpdate', (wallet) => {
-        setBalanceHead(wallet.balance.balance);
+        setBalanceHead(wallet?.balance?.balance);
       });
   
       return () => {
