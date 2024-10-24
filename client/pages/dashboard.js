@@ -18,7 +18,7 @@ import io from "socket.io-client";
 import Chart from "../components/chart";
 import TransactionLog from "../components/transactionlog";
 
-const socket = io(process.env.NEXT_PUBLIC_DB_BASE_URL);
+const socket = io('http://localhost:5000/');
 
 function Dashboard() {
   const router = useRouter();
@@ -32,9 +32,14 @@ function Dashboard() {
   const apiData = useSelector((state) => state.dashboardApi.apiData);
   const loading = useSelector((state) => state.dashboardApi.loading);
   const error = useSelector((state) => state.dashboardApi.error);
-  const [amount, setAmount] = useState(55);
+  const [lastAction, setLastAction] = useState("higher"); 
+  const [amount, setAmount] = useState(100);
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(1);
+  
+  const [callProposal, setCallProposal] = useState(null);
+  const [putProposal, setPutProposal] = useState(null);
+  const [quoteCall, setQuoteCall] = useState(null);
 
   const accountList = apiData?.data?.account_list || [];
   const selectedAssets = useSelector((state) => state.popup.selectedAssets);
@@ -45,14 +50,37 @@ function Dashboard() {
       : selectedAssets[0];
 
   useEffect(() => {
+
     if (!apiReqData) {
       router.push(
         `https://oauth.deriv.com/oauth2/authorize?app_id=${process.env.NEXT_PUBLIC_APP_ID}`
       );
-    } else if (apiData === null) {
+    } 
+    if (apiData === null) {
       dispatch(loginUser(apiReqData.token1));
     }
   }, [apiReqData, apiData, dispatch, router]);
+
+
+  useEffect(() => {
+    socket.emit("joinAssetRoom", assetToTrack);
+    socket.on("assetData", (data) => {
+      console.log(data.quote);
+      setQuoteCall(data.quote);
+    })
+    socket.on('proposal', (data) => {
+      if (data.type === "CALL") {
+        setCallProposal(data.data.ask_price);
+      } else if (data.type === "PUT") {
+        setPutProposal(data.data.ask_price);
+      }
+    });
+    return () => {
+      socket.off('proposal');
+      socket.off("assetData");
+  };
+  }, [assetToTrack]);
+  
 
   const handleClickHigher = () => {
     const proposalData = {
@@ -121,37 +149,29 @@ function Dashboard() {
   };
 
   const handleAccessTimeClick = () => {
-    if (!showTransactionLog) {
-      // Emit the transaction history request when opening the popup
-      socket.emit('transcationHistoryRequest', {
-        profit_table: 1,
-        description: 1,
-        limit: 25, // Adjust the limit or add pagination later
-        offset: 0,
-        sort: "ASC",
-        loginid: apiReqData.acct1,
-        token: apiReqData.token1,
-      });
+    // Emit the transaction history request when clicking the button
+    socket.emit('transcationHistoryRequest', {
+      profit_table: 1,
+      description: 1,
+      limit: 25, // Adjust the limit or add pagination later
+      offset: 0,
+      sort: "ASC",
+      loginid: apiReqData.acct1,
+      token: apiReqData.token1,
+    });
   
-      // Listen for the transaction history response
-      socket.once('transcationHistory', (data) => {
-        console.log('Transaction history details:', data);
-        setTransactionLog(data); // Update transaction log state with received data
-        setShowTransactionLog(true); // Open the transaction log popup
-      });
-    } else {
-      // Toggle the popup visibility off
-      setShowTransactionLog(false);
-    }
-  
-    // Clean up the socket listener when the component unmounts or re-renders
+    // Listen for the transaction history response
+    socket.once('transcationHistory', (data) => {
+      console.log('Transaction history details:', data);
+      setTransactionLog(data); // Update transaction log state with received data
+      setShowTransactionLog(true); // Open the transaction log popup
+    });
     return () => {
       socket.off('transcationHistory');
     };
   };
-  
-  
-
+  // Clean up the socket listener when the component unmounts or re-renders
+ 
   const handleHelpCenterClick = () => {
     console.log("Help Center Icon clicked");
   };
@@ -167,6 +187,12 @@ function Dashboard() {
   const handleMoreClick = () => {
     console.log("More Icon clicked");
   };
+  // const handleToggleLower = ()=>{
+  //   setLastAction("lower")
+  // }
+  // const handleToggleHigher = ()=>{
+  //   setLastAction("higher")
+  // }
 
   const iconsWithHandlers = [
     { Icon: BusinessCenterIcon, handler: handleBusinessCenterClick },
@@ -204,14 +230,25 @@ function Dashboard() {
 
             <Chart />
 
-            <div className="right_side_bar flex flex-col justify-start gap-5">
+            <div className="right_side_bar flex flex-col justify-start gap-5 pt-[20px]">
               <div className="bg-gray-800 rounded-md border border-gray-600 p-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-400 px-2">Amount</span>
                   <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-white font-bold px-2">${amount}</span>
+                <span>
+                <span className="text-[#fff] font-semibold mr-2 text-lg">$</span>
+                <input
+                    type="text"
+                    name="minutes"
+                    value={amount}
+                    onChange={(e) => {
+                    setAmount(e.target.value)}}
+                    className="focus:outline-none"
+                    style={{ maxWidth:"60px",background: "#31425a",color: "rgb(255, 255, 255)",padding: "5px 10px",borderRadius: "6px"}}
+                  />
+                  </span>
                   <div className="flex gap-2">
                     <Button onClick={handleDecrease}>
                       <Remove style={{ color: "#fff" }} />
@@ -228,10 +265,29 @@ function Dashboard() {
                   <span className="text-sm text-gray-400 px-2">Time</span>
                   <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-white font-bold px-2">
+                <div className="flex items-center justify-between text-[#fff]">
+                <input
+                    type="text"
+                    name="minutes"
+                    value={formatTime(minutes)}
+                    className="focus:outline-none"
+                    onChange={(e) => {
+                    setMinutes(e.target.value)}}
+                    style={{ maxWidth:"60px",background: "#31425a",color: "rgb(255, 255, 255)",padding: "5px 10px",borderRadius: "6px"}}
+                  />
+                  <span className="px-3">:</span>
+                  <input
+                    type="text"
+                    name="seconds"
+                    value={formatTime(seconds)}
+                    className="focus:outline-none"
+                    onChange={(e) => {
+                      setSeconds(e.target.value)}}
+                    style={{ maxWidth:"60px",background: "#31425a",color: "rgb(255, 255, 255)",padding: "5px 10px",borderRadius: "6px"}}
+                  />
+                  {/* <span className="text-white font-bold px-2">
                     {formatTime(minutes)}:{formatTime(seconds)}
-                  </span>
+                  </span> */}
                   <div className="flex gap-2">
                     <Button onClick={handleDecreaseTime}>
                       <Remove style={{ color: "#fff" }} />
@@ -243,23 +299,58 @@ function Dashboard() {
                 </div>
               </div>
 
-              <div className="bg-gray-800 rounded-md border border-gray-600 p-2">
+              {/* <div className="bg-gray-800 rounded-md border border-gray-600 p-2">
                 <div className="flex gap-2 justify-center">
                   <Button
-                    className="font-extrabold bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 py-6 px-6 flex-col"
+                    className={`buy-sell-btn ${lastAction === 'higher' ? 'active' : ''}`}
                     style={{ color: "#fff" }}
-                    onClick={handleClickHigher}
+                    onClick={handleToggleHigher}
                   >
-                    <TrendingUpIcon /> Buy (Higher)
+                    <TrendingUpIcon />Higher
                   </Button>
                   <Button
-                    className="py-6 px-6 font-extrabold bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 flex-col"
+                    className={`buy-sell-btn ${lastAction === 'lower' ? 'active' : ''}`}
                     style={{ color: "#fff" }}
-                    onClick={handleClickLower}
+                    onClick={handleToggleLower}
                   >
-                    <TrendingDownIcon /> Buy (Lower)
+                    <TrendingDownIcon /> Lower
                   </Button>
                 </div>
+              </div> */}
+
+              <div className="bg-gray-800 rounded-md border border-gray-600 p-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xl text-gray-400 px-2">Payout per point</span>
+                  <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
+               </div>
+               <div className="text-xl text-[#fff] px-2 font-bold py-6">
+                {callProposal} USD
+               </div>
+               <Button
+                  className="sell font-extrabold bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 py-6 px-6 w-full"
+                  style={{ color: "#fff" }}
+                  onClick={ handleClickHigher}
+                >
+                  <TrendingUpIcon /> CALL  {quoteCall}
+                </Button>
+                
+              </div>
+              <div className="bg-gray-800 rounded-md border border-gray-600 p-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xl text-gray-400 px-2">Payout per point</span>
+                  <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
+                </div>
+                <div className="text-xl text-[#fff] px-2 font-bold py-6">
+                  {putProposal} USD
+                </div>
+                  <Button
+                  className="sell py-6 px-6 font-extrabold bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 w-full"
+                  style={{ color: "#fff" }}
+                  onClick={handleClickLower}
+                > <TrendingDownIcon /> PUT {quoteCall}
+                
+                </Button>
+                
               </div>
             </div>
           </div>

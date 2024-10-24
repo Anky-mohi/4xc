@@ -77,10 +77,9 @@ function Chart() {
                 time: data.epoch,
                 value: data.quote,
             };
-            console.log(data.quote);
-            const priceFluctuation = data.quote * 0.02;
-            const openPrice = data.quote * (1 - Math.random() * 0.002);
-            const closePrice = data.quote * (1 + Math.random() * 0.002);
+            const priceFluctuation = data.quote;
+            const openPrice = data.quote * (1 - Math.random());
+            const closePrice = data.quote * (1 + Math.random());
 
             const newCandle = {
                 time: data.epoch,
@@ -115,8 +114,9 @@ function Chart() {
                 seriesRef.current.setData(updatedCandleData); // Set updated candle data
             }
         });
-
+          
         return () => {
+            socket.off('proposal');
             socket.emit("leaveAssetRoom", assetToTrack);
             socket.off("assetData");
         };
@@ -144,6 +144,14 @@ function Chart() {
                         return `${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
                     },
                     tickMarkSpacing: 2000,
+                },
+                priceScale: {
+                    mode: 1, // Ensure price scale is not scaled automatically
+                    scaleMargins: {
+                        top: 0.3,  // 30% margin at the top
+                        bottom: 0.3, // 30% margin at the bottom
+                    },
+                    borderVisible: false, // Hide the border to reduce clutter
                 },
                 handleScroll: true,
                 handleScale: true,
