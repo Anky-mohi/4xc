@@ -45,20 +45,27 @@ function DashboardHeader({ socket }) {
   const virtualAccount = accountList.find((acc) => acc.is_virtual);
   const realAccount = accountList.find((acc) => !acc.is_virtual);
   const apiReqData = useSelector((state) => state.data.apiData);
-  const userToken = apiData.token
+  const userToken = apiData.token;
 
   useEffect(() => {
     if (virtualAccount && virtualAccount.loginid) {
-      socket.emit('fetchBalance', { token: userToken, loginid: virtualAccount.loginid });
+      socket.emit("fetchBalance", {
+        token: userToken,
+        loginid: virtualAccount.loginid,
+      });
     }
-    socket.on('walletUpdate', (wallet) => setBalanceHead(wallet?.balance?.balance));
-    socket.on('purchasedTradeStream', (data) => {
-      if (['lost', 'won'].includes(data?.proposal_open_contract?.status)) {
-        console.log('purchasedTradeResult', data?.proposal_open_contract?.status);
+    socket.on("walletUpdate", (wallet) =>
+      setBalanceHead(wallet?.balance?.balance)
+    );
+    socket.on("purchasedTradeStream", (data) => {
+      if (["lost", "won"].includes(data?.proposal_open_contract?.status)) {
+        console.log(
+          "purchasedTradeResult",
+          data?.proposal_open_contract?.status
+        );
       }
     });
   }, [socket]);
-
 
   const popUpToggle = () => dispatch(showPopup());
 
@@ -68,10 +75,10 @@ function DashboardHeader({ socket }) {
       loginid: apiData.data.loginid,
       token: apiReqData.token1,
     };
-    socket.emit('topUpWallet', topUpData)
-    socket.on('walletUpdate', (wallet) => {
-      console.log('WalletUpdateAfterTopUp', wallet);
-    })
+    socket.emit("topUpWallet", topUpData);
+    socket.on("walletUpdate", (wallet) => {
+      console.log("WalletUpdateAfterTopUp", wallet);
+    });
   };
 
   const handleRemoveAsset = (asset) => {
@@ -218,7 +225,7 @@ function DashboardHeader({ socket }) {
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
               <MenuItem onClick={handleOpenMod} onClose={handleClose}>
-                <ListItemIcon>{/* <Person fontSize="small" /> */}</ListItemIcon>
+                <Person></Person>
                 Add Real account
               </MenuItem>
               <KycModal open={openModal} onClose={handleCloseMod} />

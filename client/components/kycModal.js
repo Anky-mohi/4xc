@@ -78,16 +78,27 @@ KycModal.propTypes = {
 };
 
 export default function KycModal({ open, onClose }) {
-  const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [step, setStep] = useState(1); // New state to track current step
   const currencySet = ["USD", "EUR", "GBP"];
-  const [docs, setDocs] = useState("");
-  const [phone, setPhone] = useState("");
-  const [reason, setReason] = useState("");
-  const [employment, setEmployement] = useState("");
-  const [yesno, setYesNo] = useState("");
-
-  const [selectedState, setSelectedState] = useState("");
+  const [formData, setFormData] = useState({
+    selectedCurrency: "",
+    docs: "",
+    phone: "",
+    reason: "",
+    employment: "",
+    firstName: "",
+    lastName: "",
+    dob: null,
+    confirmMatch: false,
+    taxResidence: "",
+    taxId: "",
+    address1: "",
+    address2: "",
+    town: "",
+    selectedState: "",
+    zip: "",
+    uscitizen: "",
+  });
 
   const stateList = [
     { value: "", label: "Select a state" },
@@ -120,31 +131,20 @@ export default function KycModal({ open, onClose }) {
     { value: "TO", label: "Tocantins (TO)" },
   ];
 
-  const stateHandleChange = (event) => {
-    setSelectedState(event.target.value);
-  };
-
-  const handleCurrencySelect = (currency) => {
-    setSelectedCurrency(currency);
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleNextStep = () => {
     if (step < 5) {
       setStep(step + 1);
     } else {
+      return console.log("Final Data:", formData);
       onClose(); // Close modal after the last step
     }
   };
   const handlePrevStep = () => {
     setStep(step - 1);
-  };
-
-  const handleChange = (event) => {
-    setDocs(event.target.value);
-  };
-
-  const PleaseSelect = () => {
-    setYesNo(yesno);
   };
 
   // Dynamic content for each step
@@ -164,7 +164,7 @@ export default function KycModal({ open, onClose }) {
                     sx={{
                       padding: "16px",
                       border:
-                        selectedCurrency === currency
+                        formData.selectedCurrency === currency
                           ? "2px solid #E50000"
                           : "none",
                       borderRadius: "4px",
@@ -177,12 +177,14 @@ export default function KycModal({ open, onClose }) {
                       height: "100%",
                       "&:hover": {
                         border:
-                          selectedCurrency !== currency
+                          formData.selectedCurrency !== currency
                             ? "1px solid #E0E0E0"
                             : "2px solid #E50000",
                       },
                     }}
-                    onClick={() => handleCurrencySelect(currency)}
+                    onClick={() =>
+                      handleInputChange("selectedCurrency", currency)
+                    }
                   >
                     <img
                       src={`path_to_${currency.toLowerCase()}_icon`}
@@ -209,7 +211,6 @@ export default function KycModal({ open, onClose }) {
       case 2:
         return (
           <>
-            <h5>Identity verification</h5>
             <Box
               component="form"
               sx={{
@@ -220,16 +221,17 @@ export default function KycModal({ open, onClose }) {
               noValidate
               autoComplete="off"
             >
+              <h5 className="mb-3 pt-[40px]">Identity verification</h5>
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel id="demo-simple-select-helper-label">
-                  Document Type
+                  Document Type *
                 </InputLabel>
                 <Select
                   labelId="demo-simple-select-helper-label"
                   id="demo-simple-select-helper"
-                  value={docs}
+                  value={formData.docs}
                   label="Document Type"
-                  onChange={handleChange}
+                  onChange={(e) => handleInputChange("docs", e.target.value)}
                 >
                   <MenuItem value="">
                     <em>None</em>
@@ -243,12 +245,14 @@ export default function KycModal({ open, onClose }) {
               <TextField
                 id="outlined-multiline-flexible"
                 label="Additional Info"
+                value={formData.addinfo}
+                onChange={(e) => handleInputChange("addinfo", e.target.value)}
                 multiline
                 maxRows={4}
                 sx={{ mb: 2 }}
               />
 
-              <h5>Details</h5>
+              <h5 className="mb-3 pt-[40px]">Details</h5>
               <Box className="flex flex-col gap-4 border border-gray-400 rounded-lg p-4">
                 <Alert severity="warning">
                   To avoid delays, enter your <b>name</b> and{" "}
@@ -258,6 +262,10 @@ export default function KycModal({ open, onClose }) {
 
                 <TextField
                   id="firstName"
+                  value={formData.firstname}
+                  onChange={(e) =>
+                    handleInputChange("firstname", e.target.value)
+                  }
                   label="First Name"
                   variant="outlined"
                   fullWidth
@@ -265,6 +273,10 @@ export default function KycModal({ open, onClose }) {
                 <TextField
                   id="lastName"
                   label="Last Name"
+                  value={formData.lastname}
+                  onChange={(e) =>
+                    handleInputChange("lastname", e.target.value)
+                  }
                   variant="outlined"
                   fullWidth
                 />
@@ -285,15 +297,15 @@ export default function KycModal({ open, onClose }) {
                 />
               </Box>
 
-              <h5>Additional information</h5>
+              <h5 className="mb-3 pt-[40px]">Additional information</h5>
               <Box className="flex flex-col gap-4 border border-gray-400 rounded-lg p-4">
                 <TextField
                   id="phone"
                   label="Phone"
                   variant="outlined"
                   fullWidth
-                  value={phone}
-                  onChange={handleChange}
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="+1 (555) 555-5555"
                   InputProps={{
                     startAdornment: (
@@ -313,9 +325,11 @@ export default function KycModal({ open, onClose }) {
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    value={reason}
-                    label="Document Type"
-                    onChange={handleChange}
+                    value={formData.reason}
+                    label="Add Reason"
+                    onChange={(e) =>
+                      handleInputChange("reason", e.target.value)
+                    }
                   >
                     <MenuItem value="hedging">
                       <em>Hedging</em>
@@ -332,7 +346,6 @@ export default function KycModal({ open, onClose }) {
       case 3:
         return (
           <>
-            <h5>Identity verification</h5>
             <Box
               component="form"
               sx={{
@@ -343,6 +356,7 @@ export default function KycModal({ open, onClose }) {
               noValidate
               autoComplete="off"
             >
+              <h5 className="mb-3 pt-[40px]">Identity verification</h5>
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel id="demo-simple-select-helper-label">
                   Employment Status
@@ -350,26 +364,34 @@ export default function KycModal({ open, onClose }) {
                 <Select
                   labelId="demo-simple-select-helper-label"
                   id="demo-simple-select-helper"
-                  value={employment}
-                  label="Document Type"
-                  onChange={handleChange}
+                  label="Employment Status"
+                  value={formData.employment}
+                  onChange={(e) =>
+                    handleInputChange("employment", e.target.value)
+                  }
                 >
                   <MenuItem value={"employed"}>Employed</MenuItem>
-                  <MenuItem value={"employed"}>Pensioner</MenuItem>
-                  <MenuItem value={"employed"}>Self-Employed</MenuItem>
-                  <MenuItem value={"employed"}>Student</MenuItem>
-                  <MenuItem value={"employed"}>Unemployed</MenuItem>
+                  <MenuItem value={"pensioner"}>Pensioner</MenuItem>
+                  <MenuItem value={"serfEmployed"}>Self-Employed</MenuItem>
+                  <MenuItem value={"student"}>Student</MenuItem>
+                  <MenuItem value={"unemployed"}>Unemployed</MenuItem>
                 </Select>
                 <FormHelperText>Select your identity document</FormHelperText>
               </FormControl>
               <TextField
                 id="outlined-multiline-flexible"
                 label="Tex Residence"
+                value={formData.taxResidence}
+                onChange={(e) =>
+                  handleInputChange("taxResidence", e.target.value)
+                }
                 multiline
               />
               <TextField
                 id="outlined-multiline-flexible"
                 label="Tex identification number"
+                value={formData.taxId}
+                onChange={(e) => handleInputChange("taxId", e.target.value)}
                 multiline
               />
               <FormControlLabel
@@ -393,19 +415,26 @@ export default function KycModal({ open, onClose }) {
               noValidate
               autoComplete="off"
             >
+              <h5 className="mb-3 pt-[40px]">Address</h5>
               <TextField
                 id="outlined-multiline-flexible"
                 label="First Line Of Address"
+                value={formData.address1}
+                onChange={(e) => handleInputChange("address1", e.target.value)}
                 multiline
               />
               <TextField
                 id="outlined-multiline-flexible"
                 label="Second Line of Address"
+                value={formData.address2}
+                onChange={(e) => handleInputChange("address2", e.target.value)}
                 multiline
               />
               <TextField
                 id="outlined-multiline-flexible"
                 label="Town/City"
+                value={formData.town}
+                onChange={(e) => handleInputChange("town", e.target.value)}
                 multiline
               />
 
@@ -416,9 +445,11 @@ export default function KycModal({ open, onClose }) {
                 <Select
                   labelId="demo-simple-select-helper-label"
                   id="demo-simple-select-helper"
-                  value={selectedState}
-                  label="Document Type"
-                  onChange={stateHandleChange}
+                  value={formData.selectedState}
+                  label="Select State"
+                  onChange={(e) =>
+                    handleInputChange("selectedState", e.target.value)
+                  }
                 >
                   {stateList.map((el) => (
                     <MenuItem key={el.value} value={el.value}>
@@ -431,6 +462,8 @@ export default function KycModal({ open, onClose }) {
               <TextField
                 id="outlined-multiline-flexible"
                 label="Postal/ZIP Code"
+                value={formData.zip}
+                onChange={(e) => handleInputChange("zip", e.target.value)}
                 multiline
               />
             </Box>
@@ -449,91 +482,101 @@ export default function KycModal({ open, onClose }) {
               noValidate
               autoComplete="off"
             >
-              <h6>Jurisdiction and choice of law</h6>
-              <p>
-                Your account will be opened with Deriv (SVG) LLC, and will be
-                subject to the laws of Saint Vincent and the Grenadines.
-              </p>
-              <Divider />
-              <h6>Risk warning</h6>
-              <p>
-                The financial trading services offered on this site are only
-                suitable for customers who accept the possibility of losing all
-                the money they invest and who understand and have experience of
-                the risk involved in the purchase of financial contracts.
-                Transactions in financial contracts carry a high degree of risk.
-                If the contracts you purchased expire as worthless, you will
-                lose all your investment, which includes the contract premium.
-              </p>
-              <Divider />
-              <h6>FATCA declaration</h6>
-              <ol>
-                <li>
-                  US citizenship or lawful permanent resident (green card)
-                  status
-                </li>
-                <li>A US birthplace</li>
-                <li>
-                  A US residence address or a US correspondence address
-                  (including a US PO box)
-                </li>
-                <li>
-                  Standing instructions to transfer funds to an account
-                  maintained in the United States, or directions regularly
-                  received from a US address
-                </li>
-                <li>
-                  An “in care of” address or a “hold mail” address that is the
-                  sole address with respect to the client
-                </li>
-                <li>
-                  A power of attorney or signatory authority granted to a person
-                  with a US address
-                </li>
-              </ol>
-              <p>
-                If any of the above applies to you, select <b>Yes</b>.
-                Otherwise, select <b>No</b>.
-              </p>
-
-              <FormControl fullWidth sx={{ mb: 2 }}>
-                <InputLabel id="demo-simple-select-helper-label">
-                  Employment Status
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={yesno}
-                  label="Document Type"
-                  onChange={PleaseSelect}
-                >
-                  <MenuItem value={"yes"}>Yes</MenuItem>
-                  <MenuItem value={"no"}>NO</MenuItem>
-                </Select>
-              </FormControl>
+              <div className="pt-[40px] pb-[20px]">
+                <h6>Jurisdiction and choice of law</h6>
+                <p>
+                  Your account will be opened with Deriv (SVG) LLC, and will be
+                  subject to the laws of Saint Vincent and the Grenadines.
+                </p>
+              </div>
 
               <Divider />
+              <div className="pt-[40px] pb-[20px]">
+                <h6>Risk warning</h6>
+                <p>
+                  The financial trading services offered on this site are only
+                  suitable for customers who accept the possibility of losing
+                  all the money they invest and who understand and have
+                  experience of the risk involved in the purchase of financial
+                  contracts. Transactions in financial contracts carry a high
+                  degree of risk. If the contracts you purchased expire as
+                  worthless, you will lose all your investment, which includes
+                  the contract premium.
+                </p>
+              </div>
+              <Divider />
+              <div className="pt-[40px] pb-[20px]">
+                <h6>FATCA declaration</h6>
+                <ol>
+                  <li>
+                    US citizenship or lawful permanent resident (green card)
+                    status
+                  </li>
+                  <li>A US birthplace</li>
+                  <li>
+                    A US residence address or a US correspondence address
+                    (including a US PO box)
+                  </li>
+                  <li>
+                    Standing instructions to transfer funds to an account
+                    maintained in the United States, or directions regularly
+                    received from a US address
+                  </li>
+                  <li>
+                    An “in care of” address or a “hold mail” address that is the
+                    sole address with respect to the client
+                  </li>
+                  <li>
+                    A power of attorney or signatory authority granted to a
+                    person with a US address
+                  </li>
+                </ol>
+                <p>
+                  If any of the above applies to you, select <b>Yes</b>.
+                  Otherwise, select <b>No</b>.
+                </p>
 
-              <h6>
-                Real accounts are not available to politically exposed persons
-                (PEPs).
-              </h6>
-              <p>
-                A politically exposed person (PEP) is someone appointed with a
-                prominent public position. Close associates and family members
-                of a PEP are also considered to be PEPs.
-              </p>
+                <FormControl fullWidth sx={{ mb: 2, mt: 3 }}>
+                  <InputLabel id="demo-simple-select-helper-label">
+                    Are You US citizen
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    value={formData.uscitizen}
+                    label="Document Type"
+                    onChange={(e) =>
+                      handleInputChange("agreeTerms", e.target.value)
+                    }
+                  >
+                    <MenuItem value={"yes"}>Yes</MenuItem>
+                    <MenuItem value={"no"}>NO</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <Divider />
+              <div className="pt-[40px] pb-[20px]">
+                <h6>
+                  Real accounts are not available to politically exposed persons
+                  (PEPs).
+                </h6>
+                <p>
+                  A politically exposed person (PEP) is someone appointed with a
+                  prominent public position. Close associates and family members
+                  of a PEP are also considered to be PEPs.
+                </p>
 
-              <FormControlLabel
-                control={<Checkbox />}
-                label="I am not a PEP, and I have not been a PEP in the last 12 months."
-                sx={{ mt: 2 }}
-              />
-              <FormControlLabel
-                control={<Checkbox />}
-                label=" I agree to the Terms and Conditions"
-                sx={{ mt: 2 }}
-              />
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="I am not a PEP, and I have not been a PEP in the last 12 months."
+                  sx={{ mt: 2 }}
+                />
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label=" I agree to the Terms and Conditions"
+                  sx={{ mt: 2 }}
+                />
+              </div>
             </Box>
           </>
         );
@@ -565,45 +608,73 @@ export default function KycModal({ open, onClose }) {
           >
             Add a Deriv Account
           </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 3,
+            }}
+          >
             <Box
               sx={{
                 width: "100%",
-                height: "4px",
-                backgroundColor: "#E0E0E0",
-                borderRadius: "4px",
+                height: "40px",
                 position: "relative",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <Box
                 sx={{
-                  width: `${(step / 6) * 100}%`,
-                  height: "100%",
-                  backgroundColor: "#E50000",
+                  width: "100%",
+                  height: "4px",
+                  backgroundColor: "#E0E0E0",
                   borderRadius: "4px",
                 }}
-              />
+              >
+                <Box
+                  sx={{
+                    width: `${(step / 5) * 100}%`,
+                    height: "100%",
+                    backgroundColor: "#E50000",
+                    borderRadius: "4px",
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
+                  position: "absolute",
+                  left: "0",
+                  zIndex: "111",
+                  width: "100%",
+                }}
+              >
+                {[...Array(5)].map((_, index) => (
+                  <Typography
+                    key={index}
+                    variant="body2"
+                    sx={{
+                      color: "#fff",
+                      width: "25px",
+                      height: "25px",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      background: index < step ? "#E50000" : "#444",
+                      borderRadius: "100px",
+                    }}
+                  >
+                    {index + 1}
+                  </Typography>
+                ))}
+              </Box>
             </Box>
           </Box>
 
-          {/* Dynamic Middle Content */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            {[...Array(5)].map((_, index) => (
-              <Typography
-                key={index}
-                variant="body2"
-                sx={{ color: index < step ? "#E50000" : "#B0B0B0" }}
-              >
-                {index + 1}
-              </Typography>
-            ))}
-          </Box>
           {renderStepContent()}
           <Divider />
           <div className="flex justify-end gap-[20px] items-center ">
@@ -628,12 +699,12 @@ export default function KycModal({ open, onClose }) {
             <button
               className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
               onClick={handleNextStep}
-              disabled={step === 1 && !selectedCurrency}
+              disabled={step === 1 && !formData.selectedCurrency}
               style={{
                 marginTop: "16px",
                 width: "100px",
                 height: "40px",
-                opacity: step === 1 && !selectedCurrency ? 0.5 : 1,
+                opacity: step === 1 && !formData.selectedCurrency ? 0.5 : 1,
               }}
             >
               {step < 5 ? "Next" : "Finish"}
