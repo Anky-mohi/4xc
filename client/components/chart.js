@@ -1,15 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "../styles/Chart.module.css";
 import { createChart } from "lightweight-charts";
-import io from "socket.io-client";
-const socket = io(process.env.NEXT_PUBLIC_DB_BASE_URL);
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import CandlestickChartIcon from "@mui/icons-material/CandlestickChart";
 
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHistoricalData } from "../store/slices/chartApi";
+import TradeSummary from "./tradeSummary";
 
-function Chart() {
+function Chart({ socket }) {
     const dispatch = useDispatch();
     const chartRef = useRef(null);
     const seriesRef = useRef(null);
@@ -28,7 +27,7 @@ function Chart() {
     const [isTimePopUp, setIsTimePopUp] = useState(false);
     const [hasFetchedHistoricalData, setHasFetchedHistoricalData] = useState(false);
     const [lastClosePrice, setLastClosePrice] = useState(null);
- 
+
     // Helper function to sort and filter duplicate data points
     const sortAndFilterData = (data) => {
         const uniqueTimes = new Set();
@@ -54,7 +53,7 @@ function Chart() {
             const sortedDataPoints = sortAndFilterData([...dataPoints]); // Sort and filter duplicates
             const sortedCandleData = sortAndFilterData([...candleData]); // Sort and filter duplicates
 
-            const dataToUpdate = isCandlestickChart ? limitData(sortedCandleData,60) : limitData(sortedDataPoints,60);
+            const dataToUpdate = isCandlestickChart ? limitData(sortedCandleData, 60) : limitData(sortedDataPoints, 60);
             seriesRef.current.setData(dataToUpdate); // Update with the new data points
         }
     };
@@ -67,12 +66,11 @@ function Chart() {
             dispatch(fetchHistoricalData(assetToTrack));
             setHasFetchedHistoricalData(true);
         }
-        
+
         socket.emit("joinAssetRoom", assetToTrack);
         socket.on("assetData", (data) => {
             // Ensure data is valid
             if (!data || typeof data.epoch !== 'number' || typeof data.quote !== 'number') return;
-
             const newPoint = {
                 time: data.epoch,
                 value: data.quote,
@@ -89,17 +87,17 @@ function Chart() {
                 close: closePrice,
             };
             if (lastClosePrice !== null) {
-              const currentCandleColor = closePrice < lastClosePrice ? "#f44336" : "#4caf50"; // Red or Green
-              newCandle.color = currentCandleColor;
-              newCandle.borderColor  = currentCandleColor;
-              newCandle.wickColor = currentCandleColor;
-              newCandle.barSpacing =  8;
-              newCandle.thinBars =  false;
-          }
-      
-          // Save the current candle as the last candle for the next iteration
-          setLastClosePrice(closePrice);
-      
+                const currentCandleColor = closePrice < lastClosePrice ? "#f44336" : "#4caf50"; // Red or Green
+                newCandle.color = currentCandleColor;
+                newCandle.borderColor = currentCandleColor;
+                newCandle.wickColor = currentCandleColor;
+                newCandle.barSpacing = 8;
+                newCandle.thinBars = false;
+            }
+
+            // Save the current candle as the last candle for the next iteration
+            setLastClosePrice(closePrice);
+
             // Dispatch data for area chart
             if (!isCandlestickChart) {
                 dispatch({ type: 'chart/addDataPoint', payload: newPoint });
@@ -114,7 +112,7 @@ function Chart() {
                 seriesRef.current.setData(updatedCandleData); // Set updated candle data
             }
         });
-          
+
         return () => {
             socket.off('proposal');
             socket.emit("leaveAssetRoom", assetToTrack);
@@ -144,14 +142,15 @@ function Chart() {
                         return `${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`;
                     },
                     tickMarkSpacing: 2000,
+                    rightOffset: 25,
                 },
                 priceScale: {
-                    mode: 1, // Ensure price scale is not scaled automatically
+                    mode: 1,
                     scaleMargins: {
-                        top: 0.3,  // 30% margin at the top
-                        bottom: 0.3, // 30% margin at the bottom
+                        top: 0.3,
+                        bottom: 0.3,
                     },
-                    borderVisible: false, // Hide the border to reduce clutter
+                    borderVisible: false,
                 },
                 handleScroll: true,
                 handleScale: true,
@@ -162,13 +161,12 @@ function Chart() {
 
             if (isCandlestickChart) {
                 series = chart.addCandlestickSeries({
-                    upColor: "#4caf50", // Green for bullish candles
-                    downColor: "#f44336", // Red for bearish candles
+                    upColor: "#4caf50",
+                    downColor: "#f44336",
                     borderDownColor: "#f44336",
                     borderUpColor: "#4caf50",
                     wickDownColor: "#f44336",
                     wickUpColor: "#4caf50",
-                    // Smoothing effect by adjusting candle width
                     barSpacing: 6,
                     priceLineVisible: true,
                     priceLineWidth: 1,
@@ -176,15 +174,36 @@ function Chart() {
                     priceLineStyle: 2,
                 });
                 seriesRef.current = series;
-                series.setData(limitData(sortAndFilterData(candleData), 60)); 
+                series.setData(limitData(sortAndFilterData(candleData), 60));
             } else {
                 series = chart.addAreaSeries({
                     lineColor: "#fff",
                     topColor: "#b6b6b6",
                     bottomColor: "#b6b6b621",
+                    lastPriceAnimation: 1,
+                    lineWidth: 1,
                 });
                 seriesRef.current = series;
-                series.setData(limitData(sortAndFilterData(dataPoints), 60)); 
+                series.setData(limitData(sortAndFilterData(dataPoints), 60));
+
+                // Function to add a glowing marker for the last price
+                const addGlowingMarker = (price, time) => {
+                    series.setMarkers([
+                        {
+                            time: time,
+                            position: 'inBar',
+                            color: '#4caf50',
+                            shape: 'circle',
+                            size: 0.4,
+                        },
+                    ]);
+                };
+
+                // Get the last price and time from the dataPoints
+                if (dataPoints.length > 0) {
+                    const lastDataPoint = dataPoints[dataPoints.length - 1];
+                    addGlowingMarker(lastDataPoint.value, lastDataPoint.time); // Ensure 'time' is in your dataPoints
+                }
             }
 
             chartRef.current = chart;
@@ -246,6 +265,9 @@ function Chart() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="trade-summary-overlay">
+                <TradeSummary socket={socket} />
             </div>
         </div>
     );

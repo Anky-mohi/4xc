@@ -2,18 +2,18 @@ import { createSlice } from '@reduxjs/toolkit';
 
 
 const initialState = {
-    apiData: null,  
+  apiData: null,
 }
 
 const dataSlice = createSlice({
-    name: 'data',
-    initialState,
-reducers: {
+  name: 'data',
+  initialState,
+  reducers: {
     setApiData: (state, action) => {
       state.apiData = action.payload;
     },
     clearApiData: (state) => {
-      state.apiData = null; 
+      state.apiData = null;
     },
   },
 
