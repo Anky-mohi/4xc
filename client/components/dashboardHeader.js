@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { showPopup, removeSelectedAsset } from "../store/slices/popupSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -7,80 +6,72 @@ import Popup from "./Popup";
 import Link from "next/link";
 import Image from "next/image";
 import ViewModuleIcon from "@mui/icons-material/ViewModule";
-import AddIcon from "@mui/icons-material/Add";
-import { Button } from "@mui/material";
 import {
+  Box,
+  MenuItem,
+  ListItemIcon,
+  Divider,
+  IconButton,
+  Typography,
+  Tooltip,
+  Avatar,
+  Menu,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  Person,
+  Logout,
   ArrowDropDown,
   CurrencyExchange,
-  Person,
-  PersonPinCircleOutlined,
 } from "@mui/icons-material";
+import KycModal from "../components/kycModal";
 import ReplyIcon from "@mui/icons-material/Reply";
-import {
-  fetchRealBalance,
-  fetchVRTBalance,
-  refreshToptup,
-} from "../store/slices/walletSlice";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 const socket = io("http://localhost:5000/");
 
-function DashboardHeader() {
+function DashboardHeader({ socket }) {
   const dispatch = useDispatch();
 
   const [userMenu, setUserMenu] = useState(false);
   const [balance, setBalance] = useState(false);
-    const [balanceHead, setBalanceHead] = useState(0);
-  const [error, setError] = useState(null);
- 
+  const [balanceHead, setBalanceHead] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
   const realBalance = useSelector((state) => state.getBalance.realBalance || 0);
   const selectedAssets = useSelector((state) => state.popup.selectedAssets);
   const apiData = useSelector((state) => state.dashboardApi.apiData);
   const accountList = apiData?.data?.account_list || [];
-  const realAccount = accountList.find((acc) => !acc.is_virtual);
   const virtualAccount = accountList.find((acc) => acc.is_virtual);
+  const realAccount = accountList.find((acc) => !acc.is_virtual);
   const apiReqData = useSelector((state) => state.data.apiData);
-
+  const userToken = apiData.token
 
   useEffect(() => {
     if (virtualAccount && virtualAccount.loginid) {
-      socket.emit('fetchBalance', apiData);
-      socket.on('walletUpdate', (wallet) => {
-        setBalanceHead(wallet?.balance?.balance);
-      });
-  
-      return () => {
-        socket.off('walletUpdate');
+      socket.emit('fetchBalance', { token: userToken, loginid: virtualAccount.loginid });
+    }
+    socket.on('walletUpdate', (wallet) => setBalanceHead(wallet?.balance?.balance));
+    socket.on('purchasedTradeStream', (data) => {
+      if (['lost', 'won'].includes(data?.proposal_open_contract?.status)) {
+        console.log('purchasedTradeResult', data?.proposal_open_contract?.status);
       }
-    }
-  }, [virtualAccount,apiData]);
+    });
+  }, [socket]);
 
 
+  const popUpToggle = () => dispatch(showPopup());
 
-  useEffect(() => {
-    if (realAccount && realAccount.loginid) {
-      dispatch(fetchRealBalance(realAccount.loginid, apiReqData.token1));
-    }
-    if (virtualAccount && virtualAccount.loginid) {
-      console.log(apiReqData.token1);
-      dispatch(
-        fetchVRTBalance({
-          loginid: virtualAccount.loginid,
-          derivtoken: apiReqData.token1,
-        })
-      );
-    }
-  }, [dispatch]);
-
-  const popUpToggle = () => {
-    dispatch(showPopup());
-  };
   const handleClickTopUp = () => {
     const topUpData = {
       topup_virtual: 1,
       loginid: apiData.data.loginid,
-      derivtoken: apiReqData.token1,
+      token: apiReqData.token1,
     };
-    dispatch(refreshToptup(topUpData));
+    socket.emit('topUpWallet', topUpData)
+    socket.on('walletUpdate', (wallet) => {
+      console.log('WalletUpdateAfterTopUp', wallet);
+    })
   };
 
   const handleRemoveAsset = (asset) => {
@@ -94,6 +85,21 @@ function DashboardHeader() {
   const showBalance = () => {
     setBalance(!balance);
   };
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleOpenMod = () => {
+    setOpenModal(true); // Set to true to open the modal
+  };
+
+  const handleCloseMod = () => {
+    setOpenModal(false); // Set to false to close the modal
+  };
 
   return (
     <header className="bg-transparent fixed w-full text-white p-4">
@@ -106,6 +112,8 @@ function DashboardHeader() {
               width={80}
               height={80}
               className="mr-2"
+              style={{ width: "auto", height: "auto" }} // Optionally use width/height auto if you plan to resize with CSS
+              priority={true} // Use priority if it's above the fold
             />
           </Link>
           <ViewModuleIcon sx={{ fontSize: 50, marginLeft: "20px" }} />
@@ -132,9 +140,9 @@ function DashboardHeader() {
                     >
                       <path
                         stroke="#fff"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="3"
                         d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                       />
                     </svg>
@@ -151,25 +159,78 @@ function DashboardHeader() {
             <AddIcon sx={{ fontSize: 50 }} />
           </div>
         </div>
-        <div className="flex items-center gap-5">
-          <div className="relative user cursor-pointer" onClick={showUser}>
-            <Person
+        <div className="flex items-center gap-5 ">
+          <>
+            <Box
               sx={{
-                fontSize: 50,
-                marginLeft: "20px",
-                background: "gray",
-                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                textAlign: "center",
               }}
-            />
-            <ArrowDropDown sx={{ fontSize: 30 }} />
-            {userMenu && (
-              <>
-                <div className="absolute w-[200px] font-normal bg-[#363c4f] text-sm text-white top-89 p-5">
-                  <h2>This is user menu</h2>
-                </div>
-              </>
-            )}
-          </div>
+            >
+              <Tooltip title="Account settings">
+                <IconButton
+                  onClick={handleClick}
+                  size="small"
+                  sx={{ ml: 2 }}
+                  aria-controls={open ? "account-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                >
+                  <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                </IconButton>
+              </Tooltip>
+            </Box>
+            <Menu
+              anchorEl={anchorEl}
+              id="account-menu"
+              open={open}
+              onClose={handleClose}
+              slotProps={{
+                paper: {
+                  elevation: 0,
+                  sx: {
+                    overflow: "visible",
+                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                    mt: 1.5,
+                    "& .MuiAvatar-root": {
+                      width: 32,
+                      height: 32,
+                      ml: -0.5,
+                      mr: 1,
+                    },
+                    "&::before": {
+                      content: '""',
+                      display: "block",
+                      position: "absolute",
+                      top: 0,
+                      right: 14,
+                      width: 10,
+                      height: 10,
+                      bgcolor: "background.paper",
+                      transform: "translateY(-50%) rotate(45deg)",
+                      zIndex: 0,
+                    },
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              <MenuItem onClick={handleOpenMod} onClose={handleClose}>
+                <ListItemIcon>{/* <Person fontSize="small" /> */}</ListItemIcon>
+                Add Real account
+              </MenuItem>
+              <KycModal open={openModal} onClose={handleCloseMod} />
+              <Divider />
+              <MenuItem onClose={handleClose}>
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Menu>
+          </>
 
           <div
             className="relative balance text-2xl cursor-pointer text-orange-600 font-bold"
