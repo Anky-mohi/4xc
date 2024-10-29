@@ -1,0 +1,24 @@
+
+.popupBouncy {
+    animation: bounceOpen 0.6s ease forwards;
+    opacity: 1; /* Make visible */
+  }
+
+@keyframes bounceOpen {
+    0% {
+        height: 0;
+        transform: translate(0%, -70%) scaleY(1); 
+    }
+    60% {
+        height: 40%;
+        transform: translate(0%, -40%) scaleY(1); 
+    }
+    80% {
+        height: 70%;
+        transform: translate(0%, -20%) scaleY(1); 
+    }
+    100% {
+        height: 80%;
+        transform: translate(0%, 0%) scaleY(1); 
+    }
+}

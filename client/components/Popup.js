@@ -15,6 +15,7 @@ import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import styles from "../styles/popup.module.css";
 
 function Popup() {
   const dispatch = useDispatch();
@@ -93,11 +94,10 @@ function Popup() {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
       <div
-        className="bg-black p-4 rounded shadow-lg text-center text-black relative overflow-auto"
+        className={`bg-[#1a1a1a] p-4 rounded shadow-lg text-center text-black relative overflow-auto ${styles.popupBouncy}`}
         ref={popupRef}
         style={{
           maxWidth: "90%",
-          maxHeight: "80%",
           padding: "40px 20px",
           margin: "auto",
         }}

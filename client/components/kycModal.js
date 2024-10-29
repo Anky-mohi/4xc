@@ -261,7 +261,8 @@ export default function KycModal({ open, onClose }) {
                 </Alert>
 
                 <TextField
-                  id="firstName"
+                  id="Transaction History
+"
                   value={formData.firstname}
                   onChange={(e) =>
                     handleInputChange("firstname", e.target.value)
