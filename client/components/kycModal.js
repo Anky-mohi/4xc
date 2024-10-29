@@ -86,8 +86,8 @@ export default function KycModal({ open, onClose }) {
     phone: "",
     reason: "",
     employment: "",
-    firstName: "",
-    lastName: "",
+    firstname: "",
+    lastname: "",
     dob: null,
     confirmMatch: false,
     taxResidence: "",
@@ -139,7 +139,7 @@ export default function KycModal({ open, onClose }) {
     if (step < 5) {
       setStep(step + 1);
     } else {
-      return console.log("Final Data:", formData);
+      console.log("Final Data:", formData);
       onClose(); // Close modal after the last step
     }
   };
@@ -187,7 +187,7 @@ export default function KycModal({ open, onClose }) {
                     }
                   >
                     <img
-                      src={`path_to_${currency.toLowerCase()}_icon`}
+                      src={`/Images/Currency/${currency.toLowerCase()}.svg`}
                       alt={`${currency} Icon`}
                       style={{
                         width: "50px",

@@ -97,11 +97,12 @@ function DashboardHeader({ socket }) {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
-    setAnchorEl(null);
+    setAnchorEl(false);
   };
 
   const handleOpenMod = () => {
-    setOpenModal(true); // Set to true to open the modal
+    setOpenModal(true); 
+    setAnchorEl(false);
   };
 
   const handleCloseMod = () => {
@@ -224,11 +225,10 @@ function DashboardHeader({ socket }) {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem onClick={handleOpenMod} onClose={handleClose}>
+              <MenuItem onClick={handleOpenMod}>
                 <Person></Person>
                 Add Real account
               </MenuItem>
-              <KycModal open={openModal} onClose={handleCloseMod} />
               <Divider />
               <MenuItem onClose={handleClose}>
                 <ListItemIcon>
@@ -237,6 +237,7 @@ function DashboardHeader({ socket }) {
                 Logout
               </MenuItem>
             </Menu>
+            <KycModal open={openModal} onClose={handleCloseMod} />
           </>
 
           <div

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>SX5E</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="SX5E" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-112" fill="#2355E9" x="0" y="0" width="64" height="64" rx="32"></rect>
+        <g id="Group-6" transform="translate(11.906977, 11.906977)" fill="#FBCB03">
+            <g id="Group-5" transform="translate(1.747219, 0.000000)">
+                <circle id="Oval" cx="18.3458038" cy="2.62082912" r="2.62082912"></circle>
+                <circle id="Oval-Copy" cx="9.60970677" cy="4.36804853" r="2.62082912"></circle>
+                <circle id="Oval-Copy-2" cx="27.0819009" cy="4.36804853" r="2.62082912"></circle>
+                <circle id="Oval-Copy-3" cx="34.0707786" cy="11.3569262" r="2.62082912"></circle>
+                <circle id="Oval-Copy-4" cx="2.62082912" cy="11.3569262" r="2.62082912"></circle>
+            </g>
+            <g id="Group-5-Copy" transform="translate(20.093023, 33.197169) scale(1, -1) translate(-20.093023, -33.197169) translate(1.747219, 26.208291)">
+                <circle id="Oval" cx="18.3458038" cy="2.62082912" r="2.62082912"></circle>
+                <circle id="Oval-Copy" cx="9.60970677" cy="4.36804853" r="2.62082912"></circle>
+                <circle id="Oval-Copy-2" cx="27.0819009" cy="4.36804853" r="2.62082912"></circle>
+                <circle id="Oval-Copy-3" cx="34.0707786" cy="11.3569262" r="2.62082912"></circle>
+                <circle id="Oval-Copy-4" cx="2.62082912" cy="11.3569262" r="2.62082912"></circle>
+            </g>
+            <circle id="Oval-Copy-6" cx="37.5652174" cy="20.0930233" r="2.62082912"></circle>
+            <circle id="Oval-Copy-5" cx="2.62082912" cy="20.0930233" r="2.62082912"></circle>
+        </g>
+    </g>
+</svg>
