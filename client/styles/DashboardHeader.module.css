@@ -42,8 +42,8 @@ body[data-theme="light"] .section {
   /* Common Styles */
  
   .sizer {
-    padding: 120px 0px;
-    background-color: #000000b5;
+    padding: 70px 0px;
+    background-color: #1e2537de;
   }
   .container {
     max-width: 1280px;

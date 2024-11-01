@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }) {
   const isDashboard = router.pathname.startsWith("/dashboard");
 
   return (
-    <div>
+    <div className="h-[100vh] bg-[#1e2537]">
        {!isDashboard && <Header />}
       <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>

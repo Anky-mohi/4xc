@@ -71,12 +71,12 @@ function Dashboard() {
   };
 
   const iconsWithHandlers = [
-    { Icon: BusinessCenterIcon, handler: handleBusinessCenterClick },
-    { Icon: AccessTimeFilledIcon, handler: handleAccessTimeClick },
-    { Icon: HelpCenterIcon, handler: handleHelpCenterClick },
-    { Icon: LeaderboardIcon, handler: handleLeaderboardClick },
-    { Icon: LocalFireDepartmentIcon, handler: handleFireClick },
-    { Icon: MoreHorizIcon, handler: handleMoreClick },
+    { Icon: BusinessCenterIcon, handler: handleBusinessCenterClick, text:"TOTAL PROFITFOLIO" },
+    { Icon: AccessTimeFilledIcon, handler: handleAccessTimeClick,text:"TRADING HISTORY" },
+    { Icon: HelpCenterIcon, handler: handleHelpCenterClick,text:"CHARTS & SUPPORT" },
+    { Icon: LeaderboardIcon, handler: handleLeaderboardClick, text:"LEADER BOARD" },
+    { Icon: LocalFireDepartmentIcon, handler: handleFireClick , text:"PROMO" },
+    { Icon: MoreHorizIcon, handler: handleMoreClick, text:"MORE" },
   ];
 
   if (loading) return <div>Loading...</div>;
@@ -90,32 +90,39 @@ function Dashboard() {
         <div className="overlay"></div>
         <div className={styles.sizer}>
           <div className={`flex justify-between ${styles.container}`}>
-            <div className="left_side_bar flex flex-col gap-5">
-              {iconsWithHandlers.map(({ Icon, handler }, index) => (
-                <div key={index} className="icon_content">
-                  <button
+            <div className="left_side_bar flex flex-col gap-5 bg-[#1e2537] p-2 pt-[50px] ">
+              {iconsWithHandlers.map(({ Icon, handler, text }, index) => (
+                <div key={index} className="icon_content text-center">
+                  {/* <button
                     type="button"
                     className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5"
                     onClick={handler}
+                  > */}
+                  <button
+                    type="button"
+                    className="text-[#8f939c] focus:ring-4 focus:outline-none focus:ring-transparent font-medium rounded-lg text-sm py-2.5"
+                    onClick={handler}
                   >
-                    <Icon style={{ color: "#fff" }} />
+                    <Icon style={{ color: "#8f939c" }} />
+                    <div className = "text-center text-[10px]">{text}</div>
+                    
                   </button>
                 </div>
               ))}
             </div>
-
+            {isTransactionHistoryVisible &&
+            <TransactionLog
+              isOpen={isTransactionHistoryVisible}
+              onClose={handleAccessTimeClick}
+              socket={socket}
+              userInfo={apiReqData}
+            />}
             <Chart socket={socket}/>
             <RightSidebar socket={socket} userInfo={apiReqData} />
           </div>
         </div>
       </div>
-      {isTransactionHistoryVisible &&
-        <TransactionLog
-          isOpen={isTransactionHistoryVisible}
-          onClose={handleAccessTimeClick}
-          socket={socket}
-          userInfo={apiReqData}
-        />}
+      
     </div>
   );
 }

@@ -58,17 +58,15 @@ const TransactionLog = ({ isOpen, onClose, socket, userInfo }) => {
 
   if (!isOpen) return null;
   return (
-    <div className={`${styles.popup} ${transactions ? styles.show : ""}`}>
-      <div className="relative">
-        <button className={styles.closeButton} onClick={onClose}>
-          X
-        </button>
-        <h2 className={`${styles.heading} pt-5`}>Transaction History</h2>
+    <div className={` ${transactions ? styles.show : ""}`}>
+      <div className="relative bg-[#1e2537]">
+        <h2 className={`${styles.heading} pt-5 text-gray-400 bg-[#1e2537]`}>Transaction History</h2>
         <TableContainer
           sx={{
+            overflowX:"hidden",
             maxHeight: 440,
-            backgroundColor: "#fff",
-            maxWidth: "440px p-2",
+            backgroundColor: "#1e2537",
+            maxWidth: "440px",
           }}
           className={styles.tableContainer}
         >
@@ -76,24 +74,24 @@ const TransactionLog = ({ isOpen, onClose, socket, userInfo }) => {
             <TableHead>
               <TableRow>
                 <TableCell
-                  sx={{ backgroundColor: "#1a1a1a", color: "#f5f5f5" }}
+                  sx={{ backgroundColor: "#1e2537", color: "#f5f5f5",borderBottom:"1px solid #4b5563"  }}
                 >
                   Type
                 </TableCell>
                 <TableCell
-                  sx={{ backgroundColor: "#1a1a1a", color: "#f5f5f5" }}
+                  sx={{ backgroundColor: "#1e2537", color: "#f5f5f5", borderBottom:"1px solid #4b5563"  }}
                   align="right"
                 >
                   Buy Price
                 </TableCell>
                 <TableCell
-                  sx={{ backgroundColor: "#1a1a1a", color: "#f5f5f5" }}
+                  sx={{ backgroundColor: "#1e2537", color: "#f5f5f5" , borderBottom:"1px solid #4b5563" }}
                   align="right"
                 >
                   Expected Payout
                 </TableCell>
                 <TableCell
-                  sx={{ backgroundColor: "#1a1a1a", color: "#f5f5f5" }}
+                  sx={{ backgroundColor: "#1e2537", color: "#f5f5f5", borderBottom:"1px solid #4b5563"  }}
                   align="right"
                 >
                   Sell Price
@@ -107,24 +105,24 @@ const TransactionLog = ({ isOpen, onClose, socket, userInfo }) => {
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                     color: "#fff",
-                    backgroundColor: "#1a1a1a",
+                    backgroundColor: "#1e2537",
                     fontSize: "12px",
                   }}
                 >
-                  <TableCell component="th" scope="row" sx={{ color: "#fff" }}>
+                  <TableCell component="th" scope="row" sx={{ color: "#fff", borderBottom:"1px solid #4b5563" }}>
                     {row.contract_type}
                     <br />
                     {new Date(row.purchase_time * 1000).toLocaleString()}
                     <br />
                     {row.underlying_symbol}
                   </TableCell>
-                  <TableCell align="right" sx={{ color: "#fff" }}>
+                  <TableCell align="right" sx={{ color: "#fff", borderBottom:"1px solid #4b5563"  }}>
                     {row.buy_price}
                   </TableCell>
-                  <TableCell align="right" sx={{ color: "#fff" }}>
+                  <TableCell align="right" sx={{ color: "#fff", borderBottom:"1px solid #4b5563"  }}>
                     {row.payout}
                   </TableCell>
-                  <TableCell align="right" sx={{ color: "#fff" }}>
+                  <TableCell align="right" sx={{ color: "#fff", borderBottom:"1px solid #4b5563"  }}>
                     {row.sell_price}
                   </TableCell>
                 </TableRow>
@@ -133,7 +131,7 @@ const TransactionLog = ({ isOpen, onClose, socket, userInfo }) => {
           </Table>
         </TableContainer>
         {transactions.length > 0 && (
-          <div className="pl-4">
+          <div className="pl-4 pt-[30px]">
             <button
               className={styles.loadMoreButton}
               onClick={handleLoadMore}
@@ -144,7 +142,7 @@ const TransactionLog = ({ isOpen, onClose, socket, userInfo }) => {
           </div>
         )}
         {loading && (
-          <div className="absolute bg-[#000000d6] top-0 left-0 w-full h-full z-[111] flex items-center justify-center">
+          <div className="absolute bg-[#1e2537] top-0 left-0 w-full h-full z-[111] flex items-center justify-center">
             <div role="status" className="flex justify-center items-center">
               <svg
                 aria-hidden="true"

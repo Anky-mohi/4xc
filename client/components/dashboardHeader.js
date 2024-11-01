@@ -110,7 +110,7 @@ function DashboardHeader({ socket }) {
   };
 
   return (
-    <header className="bg-transparent fixed w-full text-white p-4">
+    <header className="bg-transparent fixed w-full text-white">
       <nav className="bg-color flex justify-between">
         <div className="text-xl font-boldn flex items-center">
           <Link href="/">
@@ -248,7 +248,7 @@ function DashboardHeader({ socket }) {
             {balance && (
               <>
                 <div className="absolute w-[600px] left-[0%] font-normal flex flex-row items-start gap-1 text-sm text-white top-[50px]">
-                  <div className="w-3/6 w-3/6 bg-[#000]">
+                  <div className="w-3/6 w-3/6 bg-[#1e2537] rounded-md rounded-r-none border border-[#4b5563] p-2">
                     <div className="real-acc-content p-[10px] flex flex-row justify-between">
                       <div className="left">
                         <div className="heading text-[16px] pb-2 font-semibold uppercase">
@@ -260,17 +260,17 @@ function DashboardHeader({ socket }) {
                         </div>
                       </div>
                       <div className="right-content flex flex-row gap-[2px]">
-                        <div className="py-[10px] px-[10px] bg-[#777] deposit_icon">
+                        <div className="py-[10px] px-[10px] bg-[#31425a] deposit_icon">
                           <ReplyIcon />
                         </div>
-                        <div className="py-[10px] px-[20px] bg-[#777]">
+                        <div className="py-[10px] px-[20px] bg-[#31425a]">
                           Deposit
                         </div>
                       </div>
                     </div>
-                    <div className="practice_content bg-[#555] p-[10px] flex flex-row justify-between">
-                      <div className="left">
-                        <div className="heading text-[16px] pb-2 font-semibold uppercase">
+                    <div className="practice_content flex gap-[4px] flex-row justify-between items-center">
+                      <div className="left p-[10px]  w-[65%]">
+                        <div className="heading text-[16px] font-semibold uppercase">
                           Practice Account
                         </div>
                         <div className="price text-[#e8570c] font-bold">
@@ -279,7 +279,7 @@ function DashboardHeader({ socket }) {
                       </div>
                       <div className="right-content">
                         <div
-                          className="py-[10px] px-[20px] bg-[#777]"
+                          className="py-[10px] px-[20px] bg-[#31425a]"
                           onClick={handleClickTopUp}
                         >
                           Top Up

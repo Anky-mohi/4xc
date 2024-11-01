@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import { Add, Remove, HelpOutline } from "@mui/icons-material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import { useSelector } from "react-redux";
 
 const RightSidebar = ({ socket }) => {
@@ -142,7 +143,7 @@ const RightSidebar = ({ socket }) => {
         onInputChange={(e) => setAmount(Number(e.target.value))}
       />
       <ControlSection
-        label="Time"
+        label="Expiration"
         value={`${formatTime(time.minutes)}:${formatTime(time.seconds)}`}
         onDecrease={() => handleTimeChange("seconds", -1)}
         onIncrease={() => handleTimeChange("seconds", 1)}
@@ -163,7 +164,13 @@ const RightSidebar = ({ socket }) => {
           }));
         }}
       />
-      ;
+      <div>
+        <div className="flex items-center justify-center">
+          <span className="text-sm text-gray-200 px-2">Profit</span>
+          <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
+        </div>
+        <div className="text-[50px] text-[#33d05a] px-2">+85%</div>
+      </div>
       <ProposalButton
         payout={proposals?.call?.payout}
         label="CALL"
@@ -202,55 +209,94 @@ const ControlSection = ({
   secondInputValue,
   onSecondInputChange,
 }) => (
-  <div className="bg-gray-800 rounded-md border border-gray-600 p-2">
-    <div className="flex items-center justify-between">
-      <span className="text-sm text-gray-400 px-2">{label}</span>
-      <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
-    </div>
-    <div className="flex items-center justify-between gap-2">
-      {label === "Time" ? (
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={inputValue}
-            onChange={onInputChange}
-            className="focus:outline-none bg-[#31425a] text-white px-2 rounded"
-            style={{ maxWidth: "60px", padding: "5px 10px" }}
-          />
-          <span className="text-white">:</span>
-          <input
-            type="text"
-            value={secondInputValue}
-            onChange={onSecondInputChange}
-            className="focus:outline-none bg-[#31425a] text-white px-2 rounded"
-            style={{ maxWidth: "60px", padding: "5px 10px" }}
-          />
+  <>
+    <div className="flex items-center justify-center items-stretch">
+      <div
+        className={`${
+          label === "Expiration"
+            ? "bg-[#31425a] border-r-4 border-r-[#1d283a]"
+            : "bg-gray-800"
+        } rounded-md rounded-r-none border border-[#4b5563] p-2 w-[130px] `}
+      >
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-400">{label}</span>
+          <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
         </div>
-      ) : (
-        <input
-          type="text"
-          value={inputValue}
-          onChange={onInputChange}
-          className="focus:outline-none bg-[#31425a] text-white px-2 rounded"
-          style={{ minWidth: "60px", maxWidth: "100px", padding: "5px 10px" }}
-        />
-      )}
-      <div className="flex gap-2">
-        <Button
-          onClick={onDecrease}
-          sx={{ maxWidth: "30px", background: "#31425a" }}
-        >
-          <Remove style={{ color: "#fff" }} />
-        </Button>
+        <div className="flex items-center justify-start">
+          {label === "Expiration" ? (
+            <>
+              <AccessTimeFilledIcon
+                style={{ color: "#8f939c", fontSize: "15px" }}
+              />
+
+              <div className="flex">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={onInputChange}
+                  className="focus:outline-none bg-transparent text-white px-2 rounded"
+                  style={{ maxWidth: "30px", padding: "5px" }}
+                />
+                <span className="text-white flex justify-center items-center">
+                  :
+                </span>
+                <input
+                  type="text"
+                  value={secondInputValue}
+                  onChange={onSecondInputChange}
+                  className="focus:outline-none bg-transparent text-white px-2 rounded"
+                  style={{ maxWidth: "30px", padding: "5px" }}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <span className="text-[gray]">$</span>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={onInputChange}
+                className="focus:outline-none bg-transparent text-white px-2 rounded"
+                style={{
+                  minWidth: "60px",
+                  maxWidth: "100px",
+                  padding: "5px",
+                }}
+              />
+            </>
+          )}
+        </div>
+      </div>
+      <div className="flex flex-col justify-between h-[100%]">
         <Button
           onClick={onIncrease}
-          sx={{ maxWidth: "30px", background: "#31425a" }}
+          sx={{
+            maxWidth: "30px",
+            minWidth: "30px",
+            background: "#31425a",
+            height: "48%",
+            borderTopLeftRadius: "0px",
+            borderBottomLeftRadius: "0px",
+          }}
         >
-          <Add style={{ color: "#fff" }} />
+          <Add style={{ color: "#fff", fontSize: "10px" }} />
+        </Button>
+        <Button
+          onClick={onDecrease}
+          sx={{
+            maxWidth: "30px",
+            background: "#31425a",
+            minWidth: "30px",
+            height: "48%",
+            borderTopLeftRadius: "0px",
+            borderBottomLeftRadius: "0px",
+          }}
+        >
+          <Remove style={{ color: "#fff", fontSize: "10px" }} />
         </Button>
       </div>
     </div>
-  </div>
+  </>
 );
 const ProposalButton = ({
   label,
@@ -260,22 +306,25 @@ const ProposalButton = ({
   profitPercentage,
   onClick,
 }) => (
-  <div className="bg-gray-800 rounded-md border border-gray-600 p-2">
-    <div className="flex items-center justify-between">
+  <>
+    {/* <div className="bg-gray-800 rounded-md border border-gray-600 p-2"> 
+     <div className="flex items-center justify-between">
       <span className="text-xl text-gray-400 px-2">Profit Percentage</span>
       <HelpOutline className="text-gray-400 mx-2" fontSize="small" />
     </div>
     <div className="text-xl text-[#fff] px-2 font-bold py-6">
       {profitPercentage} %
     </div>
+
+     </div> */}
     <Button
-      className={`sell font-extrabold bg-gradient-to-r ${color} hover:bg-gradient-to-br focus:ring-4 focus:outline-none w-full py-6 px-6`}
+      className={`sell font-extrabold flex-col bg-gradient-to-r ${color} hover:bg-gradient-to-br focus:ring-4 focus:outline-none w-full py-6 px-6 h-[130px]`}
       style={{ color: "#fff" }}
       onClick={onClick}
     >
-      {icon} {label} {payout}
+      {icon} <span className="text-[20px] font-[700]">{label}</span> {payout}
     </Button>
-  </div>
+  </>
 );
 
 export default RightSidebar;
